@@ -1,0 +1,5 @@
+# gitignore node_module under backend
+/backend/node_modules
+
+# gitignore node_module under frontend
+/frontend/node_modules
