@@ -8,8 +8,8 @@ const app: Application = express();
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/usersdb', {
   useNewUrlParser: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
+  retryWrites: true,
+  w: 'majority',
 } as ConnectOptions);
 
 const db = mongoose.connection;
