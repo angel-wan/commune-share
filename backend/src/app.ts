@@ -4,11 +4,12 @@ import passport from 'passport';
 import requireAuth from './middlewares/AuthMiddleware';
 import userRouter from './routes/user.route';
 import './passport.config';
+import { MONGO_URI } from './config';
 
 const app: Application = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/usersdb', {
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   retryWrites: true,
   w: 'majority',
@@ -29,8 +30,6 @@ app.listen(port, () => {
 
 app.use(passport.initialize());
 app.use(express.json());
-
-
 
 app.get('/help', (req: Request, res: Response) => {
   res.send('Help page');
