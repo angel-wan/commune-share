@@ -10,10 +10,11 @@ const userSchema = new Schema({
 });
 
 // Create a TypeScript interface to describe the user document
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
   username: string;
   email: string;
   password: string;
+  comparePassword(candidatePassword: string): Promise<boolean>;
   // Define additional fields here
 }
 

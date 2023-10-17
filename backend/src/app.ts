@@ -2,6 +2,8 @@ import express, { type Application, Request, Response } from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import passport from 'passport';
 import requireAuth from './middlewares/AuthMiddleware';
+import userRouter from './routes/user.route';
+import './passport.config';
 
 const app: Application = express();
 
@@ -26,7 +28,12 @@ app.listen(port, () => {
 });
 
 app.use(passport.initialize());
+app.use(express.json());
 
-app.get('/protected-route', requireAuth, (req: Request, res: Response) => {
-  res.json({ message: 'This route is protected with JWT authentication.' });
+
+
+app.get('/help', (req: Request, res: Response) => {
+  res.send('Help page');
 });
+
+app.use('/users', userRouter);

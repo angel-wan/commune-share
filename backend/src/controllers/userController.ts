@@ -7,11 +7,18 @@ import { JWT_SECRET } from '../config'; // Import your JWT secret key
 export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
+    if (!req.body || !req.body.username) {
+      return res.status(400).json({ error: 'Invalid request data' });
+    }
+    if (!username || !email || !password) {
+      throw new Error('All fields are required');
+    }
     const user = new User({ username, email, password });
     await user.save();
 
     // Create and send a JWT token upon successful registration
     const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('jwt', token, { httpOnly: true, secure: true, sameSite: 'none' });
     res.status(201).json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
@@ -35,18 +42,30 @@ export const login = async (req: Request, res: Response) => {
       res.status(401).json({ error: 'Authentication failed' });
       return;
     }
-
     // Create and send a JWT token upon successful login
     const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    // Set the cookie as well
+    res.cookie('jwt', token, { httpOnly: true, secure: true, sameSite: 'none' });
     res.json({ token });
   } catch (error) {
     res.status(500).json({ error: 'Authentication failed' });
   }
 };
 
+export const logout = async (req: Request, res: Response) => {
+  try {
+    // Destroy the user's session to log them out
+    // remove the cookie that contains the jwt
+    res.clearCookie('jwt');
+    res.json({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).json({ error: 'Logout failed' });
+  }
+};
 // Get the user's profile
 export const profile = async (req: Request, res: Response) => {
   try {
+    console.log('req.user', req.user);
     const user = req.user as UserDocument; // The user is set in the authentication middleware
     res.json({ user });
   } catch (error) {
