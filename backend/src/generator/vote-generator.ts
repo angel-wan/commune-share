@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import Event, { VotesType, VoteOptionType } from '../models/event.model';
+import Event, { VotesType, ScheduleType, Period } from '../models/event.model';
 
 const VoteGenerator = async (ids: string[], userids: string[]) => {
   try {
@@ -28,6 +28,25 @@ const VoteGenerator = async (ids: string[], userids: string[]) => {
     event.votes.push(fakeVote);
 
     console.log(event.votes);
+
+    const fakeSchedules = userids.map((userId) => {
+      const randomPeriodIndex = Math.floor(Math.random() * Object.keys(Period).length);
+      const randomPeriod = Object.values(Period)[randomPeriodIndex];
+      const fakeSchedule: ScheduleType = {
+        user: userId,
+        slots: [{ date: new Date(), period: randomPeriod as Period }],
+      };
+      return fakeSchedule;
+    });
+
+    console.log('fakeSchedules', JSON.stringify(fakeSchedules));
+
+    // Add the fake schedule to the event
+
+    event.schedule = fakeSchedules;
+
+    console.log(event.schedule);
+
     await event.save();
   } catch (error) {
     console.error('Error generating fake vote data:', error);
