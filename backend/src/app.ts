@@ -5,6 +5,7 @@ import requireAuth from './middlewares/AuthMiddleware';
 import userRouter from './routes/user.route';
 import './passport.config';
 import { MONGO_URI } from './config';
+import eventRouter from './routes/event.route';
 
 const app: Application = express();
 
@@ -35,4 +36,5 @@ app.get('/help', (req: Request, res: Response) => {
   res.send('Help page');
 });
 
-app.use('/users', userRouter);
+app.use('/user', userRouter);
+app.use('/event', eventRouter);

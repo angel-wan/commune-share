@@ -9,7 +9,7 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write 'src/**/*.ts'",
     "start": "nodemon --exec ts-node src/app.ts",
-    "generator": "ts-node src/generator/user-generator.ts"
+    "generator": "ts-node src/generator/index.ts"
   },
   "keywords": [],
   "author": "",

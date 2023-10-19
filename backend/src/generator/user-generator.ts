@@ -1,22 +1,7 @@
-const mongoose = require('mongoose');
 import { faker } from '@faker-js/faker';
 import User from '../models/user.model';
-import { MONGO_URI } from '../config';
-// Import your User model here
 
-// Replace the connection string with your MongoDB connection
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const db = mongoose.connection;
-
-db.on('error', () => {
-  console.error('MongoDB connection error:');
-});
-
-db.once('open', async () => {
+const userGenerator = async () => {
   try {
     // Remove all existing users
     await User.deleteMany();
@@ -45,13 +30,12 @@ db.once('open', async () => {
       fakeUsers.push(new User(fakeUser));
     }
 
-    await User.bulkSave(fakeUsers);
+    const finalUser = await User.bulkSave(fakeUsers);
 
-    console.log('Fake user data inserted successfully.');
-
-    // Close the MongoDB connection
-    mongoose.connection.close();
+    const ids = Object.values(finalUser.insertedIds);
+    return ids;
   } catch (error) {
     console.error('Error generating fake user data:', error);
   }
-});
+};
+export default userGenerator;
