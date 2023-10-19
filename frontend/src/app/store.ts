@@ -2,7 +2,8 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
-import { todoListSlice } from "../store/ExampleSlice";
+import { todoListSlice } from "../feature/ExampleSlice";
+import authReducer from "../feature/auth/authSlice";
 
 const persistConfig = {
   key: "root",
@@ -14,7 +15,10 @@ const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
 });
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    root: persistedReducer,
+    auth: authReducer,
+  },
   middleware: customizedMiddleware,
 });
 

@@ -53,5 +53,5 @@ export const todoListSlice = createSlice({
 export const { addItem, removeItem, toggleItem, updateItemTitle } =
   todoListSlice.actions;
 
-export const todoListItem = (state: RootState) => state.list;
+export const todoListItem = (state: RootState) => state.root.list;
 export default todoListSlice.reducer;
