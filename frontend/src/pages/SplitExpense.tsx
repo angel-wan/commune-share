@@ -1,3 +1,9 @@
-const SplitExpense = () => {};
+const SplitExpense = () => {
+  return (
+    <>
+      <p>SplitExpense</p>
+    </>
+  );
+};
 
 export default SplitExpense;
