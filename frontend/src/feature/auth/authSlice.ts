@@ -1,32 +1,43 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { registerUser } from "./authAction";
 
+interface AuthState {
+  loading: boolean;
+  userInfo: object;
+  userToken: string | null;
+  error: string | null;
+  success: boolean;
+}
+
 const initialState = {
   loading: false,
   userInfo: {}, // for user object
   userToken: null, // for storing the JWT
   error: null,
   success: false, // for monitoring the registration process.
-};
+} as AuthState;
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
-  extraReducers: {
-    // register user
-    [registerUser.pending]: (state) => {
+  extraReducers :(builder) => {
+    builder.addCase(registerUser.pending, (state: AuthState) => {
       state.loading = true;
       state.error = null;
-    },
-    [registerUser.fulfilled]: (state) => {
-      state.loading = false;
-      state.success = true; // registration successful
-    },
-    [registerUser.rejected]: (state, { payload }) => {
-      state.loading = false;
-      state.error = payload;
-    },
+      state.success = false;
+    }
+  );
+  builder.addCase(registerUser.fulfilled, (state: AuthState, action) => {
+    state.loading = false;
+    state.userToken = action.payload as string;
+    state.success = true;
+  });
+  builder.addCase(registerUser.rejected, (state: AuthState, action) => {
+    state.loading = false;
+    state.error = action.payload as string;
+  });
+    // register user
   },
 });
 

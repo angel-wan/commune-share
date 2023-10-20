@@ -6,8 +6,16 @@ import userRouter from './routes/user.route';
 import './passport.config';
 import { MONGO_URI } from './config';
 import eventRouter from './routes/event.route';
+import cors from 'cors';
 
 const app: Application = express();
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,POST',
+  allowedHeaders: 'Content-Type,Authorization',
+};
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URI, {
