@@ -18,8 +18,10 @@ export const register = async (req: Request, res: Response) => {
 
     // Create and send a JWT token upon successful registration
     const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '1h' });
-    res.cookie('jwt', token, { httpOnly: true, secure: true, sameSite: 'none' });
+    res.cookie('jwt', token, { httpOnly: false, secure: false });
     res.status(201).json({ token });
+    // return token and redirect to home page
+    res.redirect('/');
   } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
   }
@@ -43,10 +45,9 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
     // Create and send a JWT token upon successful login
-    const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '24h' });
     // Set the cookie as well
-    res.cookie('jwt', token, { httpOnly: true, secure: true, sameSite: 'none' });
-    res.json({ token });
+    res.json({ user: { token, id: user.id, username: user.username } });
   } catch (error) {
     res.status(500).json({ error: 'Authentication failed' });
   }
