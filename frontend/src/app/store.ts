@@ -3,14 +3,20 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import { todoListSlice } from "../feature/ExampleSlice";
-import authReducer from "../feature/auth/authSlice";
+import auth from "../feature/auth/authSlice";
 
 const persistConfig = {
   key: "root",
   storage,
 };
 
+const authPersistConfig = {
+    key: "auth",
+    storage,
+}
+
 const persistedReducer = persistReducer(persistConfig, todoListSlice.reducer);
+const authReducer = persistReducer(authPersistConfig, auth.reducer);
 const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
 });

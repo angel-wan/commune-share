@@ -1,18 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser } from "./authActions";
+import { loginUser, registerUser } from "./authActions";
 
 interface AuthState {
   loading: boolean;
-  userInfo: object;
-  userToken: string | null;
+  userInfo?: {
+    id: number;
+    username: string;
+    token: string;
+  };
   error: string | null;
   success: boolean;
 }
 
 const initialState = {
   loading: false,
-  userInfo: {}, // for user object
-  userToken: null, // for storing the JWT
+  // for user object
   error: null,
   success: false, // for monitoring the registration process.
 } as AuthState;
@@ -20,25 +22,49 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
-  extraReducers :(builder) => {
+  reducers: {
+    logout: (state) => {
+      state.userInfo = undefined;
+    },
+    setCredentials: (state, { payload }) => {
+      state.userInfo = payload;
+    },
+  },
+  extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state: AuthState) => {
       state.loading = true;
       state.error = null;
       state.success = false;
-    }
-  );
-  builder.addCase(registerUser.fulfilled, (state: AuthState, action) => {
-    state.loading = false;
-    state.userToken = action.payload as string;
-    state.success = true;
-  });
-  builder.addCase(registerUser.rejected, (state: AuthState, action) => {
-    state.loading = false;
-    state.error = action.payload as string;
-  });
+    });
+    builder.addCase(registerUser.fulfilled, (state: AuthState, action) => {
+      state.loading = false;
+      state.userInfo = action.payload.user;
+      state.success = true;
+    });
+    builder.addCase(registerUser.rejected, (state: AuthState, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
     // register user
+
+    // login user
+    builder.addCase(loginUser.pending, (state: AuthState) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(loginUser.fulfilled, (state: AuthState, action) => {
+      state.loading = false;
+      state.userInfo = action.payload.user;
+      state.success = true;
+    });
+    builder.addCase(loginUser.rejected, (state: AuthState, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 
-export default authSlice.reducer;
+export const { logout, setCredentials } = authSlice.actions;
+
+export default authSlice;

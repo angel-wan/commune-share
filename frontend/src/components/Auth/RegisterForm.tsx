@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser, RegistrationData } from "../../feature/auth/authActions";
-import { useAppDispatch } from "../../app/hook";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
 
 const RegisterForm = () => {
   const [registerData, setRegisterData] = useState<RegistrationData>({
@@ -8,6 +8,8 @@ const RegisterForm = () => {
     email: "",
     password: "",
   });
+
+  const { loading } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -54,7 +56,7 @@ const RegisterForm = () => {
         />
       </div>
       <div>
-        <button onClick={submitHandler} type="submit">
+        <button onClick={submitHandler} type="submit" disabled={loading}>
           Register
         </button>
       </div>
