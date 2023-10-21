@@ -4,16 +4,16 @@ import { persistReducer, persistStore } from "redux-persist";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import { todoListSlice } from "../feature/ExampleSlice";
 import auth from "../feature/auth/authSlice";
-
+import eventReducer from "../feature/event/eventSlice";
 const persistConfig = {
   key: "root",
   storage,
 };
 
 const authPersistConfig = {
-    key: "auth",
-    storage,
-}
+  key: "auth",
+  storage,
+};
 
 const persistedReducer = persistReducer(persistConfig, todoListSlice.reducer);
 const authReducer = persistReducer(authPersistConfig, auth.reducer);
@@ -24,6 +24,7 @@ export const store = configureStore({
   reducer: {
     root: persistedReducer,
     auth: authReducer,
+    event: eventReducer,
   },
   middleware: customizedMiddleware,
 });
