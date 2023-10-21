@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import Event, { EventDocument } from '../models/event.model'; // Import your user model
 
+const isUserCreator = (req: Request, event: EventDocument) => {
+  const userId = (req.user as { _id: string })._id;
+  return event.creator.toString() === userId.toString();
+};
 // Create a new event
 export const createEvent = async (req: Request, res: Response) => {
   try {
@@ -24,24 +28,25 @@ export const createEvent = async (req: Request, res: Response) => {
 };
 
 export const updateEvent = async (req: Request, res: Response) => {
-  // Check event exists
-  console.log(req.body);
   try {
     const { eventId } = req.body;
     const event = await Event.findOne({ _id: eventId });
     if (!event) {
       return res.status(400).json({ error: 'Event does not exist' });
     }
-    // Check user is creator
-    const { _id: userId } = req.user as { _id: string };
-    if (event.creator.toString() !== userId.toString()) {
-      return res.status(401).json({ error: 'Unauthorized' });
+    if (!isUserCreator(req, event)) {
+      return res.status(401).json({ error: 'You Are Not Event Creator' });
     }
-    // Update event
     const { title, description, location } = req.body;
-    event.title = title;
-    event.description = description;
-    event.location = location;
+    if (title) {
+      event.title = title;
+    }
+    if (description) {
+      event.description = description;
+    }
+    if (location) {
+      event.location = location;
+    }
     await event.save();
     res.json({ event });
   } catch (error) {
@@ -51,7 +56,13 @@ export const updateEvent = async (req: Request, res: Response) => {
 
 export const listEvent = async (req: Request, res: Response) => {
   try {
-    const events = await Event.find();
+    //
+    const userId = (req.user as { _id: string })._id;
+    console.log('listEvent', userId);
+
+    const events = await Event.find({ creator: userId });
+    console.log('listEvent', userId, events);
+
     res.json({ events });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });

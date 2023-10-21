@@ -4,7 +4,7 @@ import { listEvent } from '../controllers/eventController';
 import requireAuth from '../middlewares/AuthMiddleware';
 const eventRouter = express.Router();
 // Define user routes
-eventRouter.get('/list', listEvent);
+eventRouter.get('/list', requireAuth, listEvent);
 
 // protected route
 eventRouter.post('/create', requireAuth, createEvent);
