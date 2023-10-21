@@ -8,7 +8,7 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password } = req.body;
     if (!req.body || !req.body.username) {
-      return res.status(400).json({ error: 'Invalid request data' });
+      return res.status(400).json({ error: 'Invalid request user data' });
     }
     if (!username || !email || !password) {
       throw new Error('All fields are required');
@@ -66,7 +66,6 @@ export const logout = async (req: Request, res: Response) => {
 // Get the user's profile
 export const profile = async (req: Request, res: Response) => {
   try {
-    console.log('req.user', req.user);
     const user = req.user as UserDocument; // The user is set in the authentication middleware
     res.json({ user });
   } catch (error) {
