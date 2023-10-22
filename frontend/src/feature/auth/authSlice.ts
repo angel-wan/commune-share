@@ -14,12 +14,11 @@ interface AuthState {
 
 const initialState = {
   loading: false,
-  // for user object
   error: null,
   success: false, // for monitoring the registration process.
 } as AuthState;
 
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -64,6 +63,8 @@ const authSlice = createSlice({
     });
   },
 });
+
+export const selectAuth = (state: AuthState) => state.userInfo;
 
 export const { logout, setCredentials } = authSlice.actions;
 

@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
+import { createSlice } from "@reduxjs/toolkit";
 import { listEvents } from "./eventActions";
 
 export interface EventListState {
@@ -19,10 +18,10 @@ export interface EventState {
   //   schedule: Array<ScheduleType>;
 }
 
-interface AttendeeType {
-  user: string;
-  status: string;
-}
+// interface AttendeeType {
+//   user: string;
+//   status: string;
+// }
 
 export interface VotesType {
   title: string;

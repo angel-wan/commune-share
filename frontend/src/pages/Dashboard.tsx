@@ -8,9 +8,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(listEvents());
+    console.log('get')
   }, []);
-
-  console.log(event.list);
 
   if (loading) {
     return <div>Loading...</div>;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 
-const RegisterForm = () => {
+const LoginForm = () => {
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     password: "",
@@ -56,4 +56,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;
