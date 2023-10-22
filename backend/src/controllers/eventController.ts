@@ -54,6 +54,22 @@ export const updateEvent = async (req: Request, res: Response) => {
   }
 };
 
+export const removeEvent = async (req: Request, res: Response) => {
+  try {
+    const { eventId } = req.body;
+    const event = await Event.findOne({ _id: eventId });
+    if (!event) {
+      return res.status(400).json({ error: 'Event does not exist' });
+    }
+    if (!isUserCreator(req, event)) {
+      return res.status(401).json({ error: 'You Are Not Event Creator' });
+    }
+    await event.deleteOne();
+  } catch (error) {
+    res.status(500).json({ error: 'Remove update failed' });
+  }
+};
+
 export const listEvent = async (req: Request, res: Response) => {
   try {
     //
