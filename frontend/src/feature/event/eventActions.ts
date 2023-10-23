@@ -43,14 +43,14 @@ export const listEvents = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = getAuthToken();
-      // Place the JWT into the request header - remember the space after 'Bearer'
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-
+      console.log(token);
       const response = await axios.get(`${backendURL}/event/list`, config);
+      console.log("list event", response);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
@@ -68,6 +68,7 @@ export const removeEvent = createAsyncThunk(
     try {
       const token = getAuthToken();
       // Place the JWT into the request header - remember the space after 'Bearer'
+
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,

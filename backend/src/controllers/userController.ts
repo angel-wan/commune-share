@@ -47,7 +47,8 @@ export const login = async (req: Request, res: Response) => {
     // Create and send a JWT token upon successful login
     const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '24h' });
     // Set the cookie as well
-    res.json({ user: { token, id: user.id, username: user.username } });
+    // res.json({ user: { token, id: user.id, username: user.username } });
+    res.status(200).json({ user: { token, id: user.id, username: user.username } });
   } catch (error) {
     res.status(500).json({ error: 'Authentication failed' });
   }
@@ -57,10 +58,11 @@ export const logout = async (req: Request, res: Response) => {
   try {
     // Destroy the user's session to log them out
     // remove the cookie that contains the jwt
-    res.clearCookie('jwt');
-    res.json({ message: 'Logout successful' });
+    console.log('remove')
+    localStorage.removeItem('persist:auth');
+    return res.json({ message: 'Logout successful' });
   } catch (error) {
-    res.status(500).json({ error: 'Logout failed' });
+    return res.status(500).json({ error: 'Logout failed' });
   }
 };
 // Get the user's profile

@@ -8,7 +8,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(listEvents());
-    console.log('get')
   }, []);
 
   if (loading) {

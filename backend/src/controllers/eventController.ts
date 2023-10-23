@@ -72,13 +72,10 @@ export const removeEvent = async (req: Request, res: Response) => {
 
 export const listEvent = async (req: Request, res: Response) => {
   try {
-    //
     const userId = (req.user as { _id: string })._id;
-    console.log('listEvent', userId);
 
     const events = await Event.find({ creator: userId });
-    console.log('listEvent', userId, events);
-
+    
     res.json({ events });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });

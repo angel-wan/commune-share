@@ -1,6 +1,5 @@
 import express from 'express';
-import { createEvent, updateEvent, getEventById, removeEvent } from '../controllers/eventController';
-import { listEvent } from '../controllers/eventController';
+import { createEvent, updateEvent, getEventById, removeEvent, listEvent } from '../controllers/eventController';
 import requireAuth from '../middlewares/AuthMiddleware';
 const eventRouter = express.Router();
 // Define user routes

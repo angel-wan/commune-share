@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
-
+import LogoutButton from "./LogoutButton";
 const LoginForm = () => {
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
@@ -23,7 +23,12 @@ const LoginForm = () => {
   };
 
   if (userInfo) {
-    return <div>Logged in as {userInfo.username}</div>;
+    return (
+      <div>
+        Logged in as {userInfo.username}
+        <LogoutButton />
+      </div>
+    );
   }
   return (
     // TODO: Create register form

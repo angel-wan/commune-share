@@ -22,7 +22,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
+    logoutUser: (state) => {
       state.userInfo = undefined;
     },
     setCredentials: (state, { payload }) => {
@@ -61,11 +61,13 @@ export const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
     });
+
+    // logout user
   },
 });
 
 export const selectAuth = (state: AuthState) => state.userInfo;
 
-export const { logout, setCredentials } = authSlice.actions;
+export const {logoutUser, setCredentials } = authSlice.actions;
 
 export default authSlice;
