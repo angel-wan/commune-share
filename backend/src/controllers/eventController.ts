@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Event, { EventDocument } from '../models/event.model'; // Import your user model
+import User from '../models/user.model';
 
 const isUserCreator = (req: Request, event: EventDocument) => {
   const userId = (req.user as { _id: string })._id;
@@ -74,8 +75,19 @@ export const listEvent = async (req: Request, res: Response) => {
   try {
     const userId = (req.user as { _id: string })._id;
 
+    // check if user is admin
+    console.log({ userId });
+
+    const user = await User.findOne({ _id: userId });
+    if (user && user.username === 'admin') {
+      console.log('userId');
+      // get all events
+      const events = await Event.find({});
+      console.log('events', events)
+      return res.json({ events });
+    }
     const events = await Event.find({ creator: userId });
-    
+
     res.json({ events });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });

@@ -26,4 +26,6 @@ db.once('open', async () => {
     throw new Error('No event ids');
   }
   await VoteGenerator(eventids, userids);
+  console.log('Done')
+  process.exit(0);
 });

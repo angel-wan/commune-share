@@ -31,6 +31,7 @@ const ScheduleSchema = new Schema({
 
 // Define the event schema
 const eventSchema = new Schema({
+  code: { type: String, required: true, unique: true },
   title: { type: String, required: true, unique: false },
   description: { type: String, required: false, unique: false },
   location: { type: String, required: false },
@@ -39,6 +40,8 @@ const eventSchema = new Schema({
   votes: [VoteOptionSchema], // Use the VoteOption schema for the votes property
   schedule: [ScheduleSchema], // Include the schedule field
   createdAt: { type: Date, required: true, default: Date.now },
+  eventStartDatetime: { type: Date, required: false },
+  eventEndDatetime: { type: Date, required: false },
 });
 
 // Create a TypeScript interface to describe the event document
@@ -46,6 +49,9 @@ export interface EventDocument extends Document {
   title: string;
   description: string;
   location: string | null;
+  eventStartDatetime: Date | null;
+  eventEndDatetime: Date | null;
+  code: string;
   creator: string;
   attendees: Array<AttendeeType>;
   votes: Array<VotesType>;
@@ -55,7 +61,7 @@ export interface EventDocument extends Document {
 
 interface AttendeeType {
   userid: string;
-  status: string;
+  status: 'pending' | 'invited';
 }
 
 export interface VotesType {
