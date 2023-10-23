@@ -12,7 +12,7 @@ const jwtStrategy = new Strategy(jwtOptions, async (payload, done) => {
   try {
     // Replace 'UserModel' with your actual user model type
     const user = await UserModel.findById(payload.sub);
-
+  
     if (!user) {
       return done(null, false);
     }
