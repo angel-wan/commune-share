@@ -1,8 +1,9 @@
 export type Event = {
-    "eid": number;
+    "_id": string;
     "title": string,
-    "time_start": Date,
-    "time_end": Date,
+    "eventStartDatetime": Date,
+    "eventEndDatetime": Date,
     "location": string,
-    "status": number
+    "description": string,
+    "createdAt": Date,
 };

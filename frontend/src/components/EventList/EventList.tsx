@@ -66,7 +66,7 @@ const EventList = () => {
 
       <Grid item>
         <List>
-          {events.map((event) => (
+          {eventList.map((event) => (
             <ListItem>
               <EventItem event={event} />
             </ListItem>
