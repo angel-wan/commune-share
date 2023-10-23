@@ -29,6 +29,15 @@ const ScheduleSchema = new Schema({
   ],
 });
 
+const AttendeeSchema = new Schema({
+  userid: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  status: {
+    type: String,
+    required: true,
+    enum: ['invited', 'joined'],
+    default: 'invited',
+  },
+})
 // Define the event schema
 const eventSchema = new Schema({
   code: { type: String, required: true, unique: true },
@@ -36,7 +45,7 @@ const eventSchema = new Schema({
   description: { type: String, required: false, unique: false },
   location: { type: String, required: false },
   creator: { type: Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who created the event
-  attendees: { type: Array, required: false },
+  attendees: [AttendeeSchema],
   votes: [VoteOptionSchema], // Use the VoteOption schema for the votes property
   schedule: [ScheduleSchema], // Include the schedule field
   createdAt: { type: Date, required: true, default: Date.now },
@@ -61,7 +70,7 @@ export interface EventDocument extends Document {
 
 interface AttendeeType {
   userid: string;
-  status: 'pending' | 'invited';
+  status: 'invited' | 'joined';
 }
 
 export interface VotesType {
