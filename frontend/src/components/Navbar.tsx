@@ -40,7 +40,7 @@ const Navbar = () => {
   };
 
   return (
-    <Container maxWidth="xl" style={{ padding: "16px" }}>
+    <Container maxWidth="lg" style={{ margin: "auto" }}>
       <AppBar
         position="static"
         style={{

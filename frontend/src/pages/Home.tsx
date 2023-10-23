@@ -1,12 +1,15 @@
 import RegisterForm from "../components/Auth/RegisterForm";
 import LoginForm from "../components/Auth/LoginForm";
 import Dashboard from "./Dashboard";
+import EventList from "../components/EventList/EventList";
+
 const Home = () => {
 
   return (
     <>
-      <RegisterForm />
-      <LoginForm />
+      {/* <RegisterForm /> */}
+      {/* <LoginForm /> */}
+      <EventList />
       <Dashboard />
     </>
   );
