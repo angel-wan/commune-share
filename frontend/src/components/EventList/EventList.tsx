@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button, Grid, List, ListItem, Typography } from "@mui/material";
 import EventListNavbar from "./EventListNavbar";
 import EventItem from "./EventItem";
+import JoinEvent from "./JoinEvent";
+import NewEvent from "./NewEvent";
 import { Event } from "../../types/event.types";
 
 const tempEvents: Event[] = [
@@ -49,10 +51,10 @@ const EventList = () => {
           xs={8}
         >
           <Grid item>
-            <Button variant="outlined">Invitation</Button>
+            <JoinEvent />
           </Grid>
           <Grid item>
-            <Button variant="outlined">New Event</Button>
+            <NewEvent />
           </Grid>
         </Grid>
       </Grid>

@@ -35,7 +35,7 @@ const EventItem: React.FC<EventItemProp> = ({ event }) => {
       direction="row"
       alignItems="center"
       border={"0.5px solid"}
-      borderRadius={2}
+      borderRadius={4}
       spacing={0}
       sx={{
         p: 1,
