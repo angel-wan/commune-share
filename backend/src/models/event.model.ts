@@ -69,7 +69,7 @@ export interface VoteOptionType {
 }
 
 export interface ScheduleType {
-  userid: string; // User ID who provided the schedule
+  user: string; // User ID who provided the schedule
   slots: Array<TimeSlotType>; // An array of time slot objects
 }
 
