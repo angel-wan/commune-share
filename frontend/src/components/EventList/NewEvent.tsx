@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useCallback } from "react";
 import {
   Box,
   Button,
@@ -16,12 +16,15 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-
+import { useAppDispatch, useAppSelector } from "../../app/hook";
+import { createEvent } from "../../feature/event/eventActions";
 const NewEvent = () => {
   const [open, setOpen] = useState(false);
   const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
 
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.userInfo);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -43,17 +46,31 @@ const NewEvent = () => {
     setFullWidth(event.target.checked);
   };
 
+  const handleSubmit = useCallback(() => {
+    console.log("submit");
+    dispatch(
+      createEvent({
+        title: "Front end",
+        description: "Descripio",
+        location: "HK",
+        creator: user?.id as string,
+      })
+    );
+  }, []);
+
   return (
     <Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
         New Event
       </Button>
+
       <Dialog
         fullWidth={true}
         maxWidth={"lg"}
         open={open}
         onClose={handleClose}
       >
+        <Button onClick={handleSubmit}>Submit</Button>
         <DialogTitle>Create New Event</DialogTitle>
         <DialogContent>
           <DialogContentText>

@@ -20,6 +20,7 @@ export const createEvent = createAsyncThunk(
     try {
       const config = {
         headers: {
+          "Authorization": `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
           "Content-Type": "application/json",
         },
       };
@@ -55,7 +56,6 @@ export const listEvents = createAsyncThunk(
     } catch (error) {
       // return custom error message from the backend if present
       if (error instanceof Error) {
-        console.log("get item", error.message);
         return rejectWithValue(error.message);
       }
     }

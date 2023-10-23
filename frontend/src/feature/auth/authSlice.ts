@@ -4,7 +4,7 @@ import { loginUser, registerUser } from "./authActions";
 interface AuthState {
   loading: boolean;
   userInfo?: {
-    id: number;
+    id: string;
     username: string;
     token: string;
   };

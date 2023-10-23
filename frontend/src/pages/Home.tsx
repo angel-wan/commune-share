@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <>
       {/* <RegisterForm /> */}
-      {/* <LoginForm /> */}
+      <LoginForm />
       <EventList />
       <Dashboard />
     </>
