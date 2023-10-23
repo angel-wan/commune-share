@@ -4,6 +4,8 @@ import { MONGO_URI } from '../config';
 import userGenerator from './user-generator';
 import EventGenerator from './event-generator';
 import VoteGenerator from './vote-generator';
+import ScheduleGenerator from './schedule-generator';
+import ExpenseGenerator from './expense-generator';
 // Import your User model here
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -26,4 +28,16 @@ db.once('open', async () => {
     throw new Error('No event ids');
   }
   await VoteGenerator(eventids, userids);
+
+  const eventidsWithSchedule = await ScheduleGenerator(userids);
+  if (!eventidsWithSchedule) {
+    throw new Error('No event ids with schedule');
+  }
+
+  const expenseIds = await ExpenseGenerator(eventids, userids);
+  if (!expenseIds) {
+    throw new Error('No expense ids');
+  }
+  console.log('Done');
+  process.exit(0);
 });

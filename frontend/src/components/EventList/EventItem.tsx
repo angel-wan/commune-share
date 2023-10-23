@@ -22,12 +22,16 @@ const months = [
 ];
 
 const getFormattedTime = (date: Date) => {
-  const hour = date.getUTCHours();
-  const minute = date.getUTCMinutes();
+  const hour = new Date(date).getUTCHours();
+  const minute = new Date(date).getUTCMinutes();
   return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
 const EventItem: React.FC<EventItemProp> = ({ event }) => {
+  const onSelectEvent = (event: Event) => {
+    console.log("event", event);
+  };
+
   return (
     <Grid
       container
@@ -40,6 +44,7 @@ const EventItem: React.FC<EventItemProp> = ({ event }) => {
       sx={{
         p: 1,
       }}
+      onClick={() => onSelectEvent(event)}
     >
       <Grid item xs={2}>
         <Box
@@ -52,15 +57,17 @@ const EventItem: React.FC<EventItemProp> = ({ event }) => {
           }}
         >
           <Grid item component="h2">
-            {event.time_start.getDate()}
+            {new Date(event.eventStartDatetime).getDate()}
           </Grid>
-          <Grid item>{months[event.time_start.getMonth()]}</Grid>
+          <Grid item>
+            {months[new Date(event.eventStartDatetime).getMonth()]}
+          </Grid>
         </Box>
       </Grid>
 
       <Grid item xs={2} component="h4" sx={{ px: 1 }}>
-        {getFormattedTime(event.time_start)} -{" "}
-        {getFormattedTime(event.time_end)}
+        {getFormattedTime(event.eventStartDatetime)} -{" "}
+        {getFormattedTime(event.eventEndDatetime)}
       </Grid>
 
       <Grid item xs={6} sx={{ p: 1 }}>

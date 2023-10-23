@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
 import Event, { EventDocument } from '../models/event.model'; // Import your user model
+import User from '../models/user.model';
 
 const isUserCreator = (req: Request, event: EventDocument) => {
   const userId = (req.user as { _id: string })._id;
   return event.creator.toString() === userId.toString();
+};
+
+const isUserExist = async (userId: string) => {
+  const user = await User.findOne({ _id: userId });
+  return !!user;
 };
 // Create a new event
 export const createEvent = async (req: Request, res: Response) => {
@@ -18,7 +24,12 @@ export const createEvent = async (req: Request, res: Response) => {
     if (!title || !location) {
       throw new Error('All fields are required');
     }
-    const event = new Event({ title, description, location, creator });
+    // 5 character with alpherbic and number code generator
+    let code = Math.random().toString(36).substr(2, 5);
+    while (Event.findOne({ code })) {
+      code = Math.random().toString(36).substr(2, 5);
+    }
+    const event = new Event({ title, description, location, creator, code });
     await event.save();
 
     res.status(201).json({ event });
@@ -73,9 +84,17 @@ export const removeEvent = async (req: Request, res: Response) => {
 export const listEvent = async (req: Request, res: Response) => {
   try {
     const userId = (req.user as { _id: string })._id;
-
+    // check if user is admin
+    const user = await User.findOne({ _id: userId });
+    if (user && user.username === 'admin') {
+      console.log('userId');
+      // get all events
+      const events = await Event.find({});
+      console.log('events', events);
+      return res.json({ events });
+    }
     const events = await Event.find({ creator: userId });
-    
+
     res.json({ events });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });
@@ -92,5 +111,26 @@ export const getEventById = async (req: Request, res: Response) => {
     res.json({ event });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });
+  }
+};
+
+export const joinEventByCode = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user as { _id: string };
+    await isUserExist(_id);
+    const { code } = req.body;
+    const event = await Event.findOne({ code });
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    event.attendees.push({
+      userid: _id,
+      status: 'invited',
+    });
+    await event.save();
+    res.json({ event });
+    res.status(200).json({ message: 'Join event successful' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error joining events' });
   }
 };

@@ -20,7 +20,7 @@ export const createEvent = createAsyncThunk(
     try {
       const config = {
         headers: {
-          "Authorization": `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
+          Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
           "Content-Type": "application/json",
         },
       };
@@ -49,9 +49,7 @@ export const listEvents = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      console.log(token);
       const response = await axios.get(`${backendURL}/event/list`, config);
-      console.log("list event", response);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
@@ -105,6 +103,33 @@ export const updateEvent = createAsyncThunk(
       const response = await axios.put(
         `${backendURL}/event/update`,
         { data },
+        config
+      );
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const joinEventByCode = createAsyncThunk(
+  "event/joinbycode",
+  async (code: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      // Place the JWT into the request header - remember the space after 'Bearer'
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.put(
+        `${backendURL}/event/code`,
+        { code },
         config
       );
       return await response.data; // Assuming the API returns a string (e.g., a token)

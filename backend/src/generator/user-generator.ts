@@ -26,7 +26,6 @@ const userGenerator = async () => {
         email: faker.internet.email(),
         password: faker.internet.password(),
       };
-
       fakeUsers.push(new User(fakeUser));
     }
 
