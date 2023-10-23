@@ -2,22 +2,28 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
-import { todoListSlice } from "../feature/ExampleSlice";
-import authReducer from "../feature/auth/authSlice";
+import { eventListSlice } from "../feature/event/eventSlice";
+import { authSlice } from "../feature/auth/authSlice";
 
-const persistConfig = {
-  key: "root",
+const authPersistConfig = {
+  key: "auth",
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, todoListSlice.reducer);
+const eventPersistConfig = {
+  key: "event",
+  storage,
+};
+
+const authReducer = persistReducer(authPersistConfig, authSlice.reducer);
+const eventReducer = persistReducer(eventPersistConfig, eventListSlice.reducer);
 const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
 });
 export const store = configureStore({
   reducer: {
-    root: persistedReducer,
     auth: authReducer,
+    event: eventReducer,
   },
   middleware: customizedMiddleware,
 });

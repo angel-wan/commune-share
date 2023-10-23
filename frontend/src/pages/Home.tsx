@@ -1,7 +1,15 @@
-import EventList from "../components/EventList/EventList";
-
+import RegisterForm from "../components/Auth/RegisterForm";
+import LoginForm from "../components/Auth/LoginForm";
+import Dashboard from "./Dashboard";
 const Home = () => {
-  return <EventList />;
+
+  return (
+    <>
+      <RegisterForm />
+      <LoginForm />
+      <Dashboard />
+    </>
+  );
 };
 
 export default Home;

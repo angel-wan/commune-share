@@ -6,6 +6,7 @@ const userRouter = express.Router();
 // Define user routes
 userRouter.post('/register', register);
 userRouter.post('/login', login);
-userRouter.get('/profile', requireAuth, profile);
 userRouter.post('/logout', logout);
+
+userRouter.get('/profile', requireAuth, profile);
 export default userRouter;

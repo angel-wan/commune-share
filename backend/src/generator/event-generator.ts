@@ -10,6 +10,8 @@ const EventGenerator = async (ids: string[]) => {
     const numFakeEvents = 10; // Number of fake events to create
     const fakeEvents = [];
 
+    
+
     for (let i = 0; i < numFakeEvents; i++) {
       const fakeEvent = {
         title: faker.company.name(),
