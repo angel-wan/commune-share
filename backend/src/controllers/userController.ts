@@ -18,10 +18,9 @@ export const register = async (req: Request, res: Response) => {
 
     // Create and send a JWT token upon successful registration
     const token = jwt.sign({ sub: user._id }, JWT_SECRET, { expiresIn: '1h' });
-    res.cookie('jwt', token, { httpOnly: false, secure: false });
-    res.status(201).json({ token });
+    res.status(200).json({ user: { token, id: user.id, username: user.username } });
     // return token and redirect to home page
-    res.redirect('/');
+    // res.redirect('/');
   } catch (error) {
     res.status(500).json({ error: 'Registration failed' });
   }

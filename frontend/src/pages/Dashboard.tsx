@@ -7,6 +7,7 @@ const Dashboard = () => {
   const event = useAppSelector((state) => state.event);
 
   useEffect(() => {
+    console.log('fetch event')
     dispatch(listEvents());
   }, []);
 

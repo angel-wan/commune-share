@@ -16,14 +16,14 @@ const eventPersistConfig = {
 };
 
 const authReducer = persistReducer(authPersistConfig, authSlice.reducer);
-const eventReducer = persistReducer(eventPersistConfig, eventListSlice.reducer);
+// const eventReducer = persistReducer(eventPersistConfig, eventListSlice.reducer);
 const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
 });
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    event: eventReducer,
+    event: eventListSlice.reducer,
   },
   middleware: customizedMiddleware,
 });

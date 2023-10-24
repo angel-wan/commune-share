@@ -1,9 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import React, { useState } from "react";
-import {
-  Container,
-  Button,
-} from "@mui/material";
+import { Container, Button } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -24,7 +21,6 @@ export default function ChooseDate() {
     }
   };
 
-
   return (
     <div>
       <Container>
@@ -43,7 +39,7 @@ export default function ChooseDate() {
             />
           ))}
           <Button
-            sx={{display:'flex', margin:'10px',}}
+            sx={{ display: "flex", margin: "10px" }}
             variant="outlined"
             onClick={handleAddTimeslot}
             disabled={timeslots.length >= maxTimeslots}
@@ -58,7 +54,6 @@ export default function ChooseDate() {
           <span key={index}>{timeslot.format("YYYY-MM-DD HH:mm")}, </span>
         ))}
       </p>
-
     </div>
   );
 }

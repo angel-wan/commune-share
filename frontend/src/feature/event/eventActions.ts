@@ -11,12 +11,12 @@ export interface EventData {
   creator: string;
   // attendees: Array<AttendeeType>;
   // votes: Array<VotesType>;
-  //   schedule: Array<ScheduleType>;
+  // schedule: Array<ScheduleType>;
 }
 export const createEvent = createAsyncThunk(
   "event/create",
   async (data: EventData, { rejectWithValue }) => {
-    const { title, description, location, creator } = data;
+    const { title, description, location } = data;
     try {
       const config = {
         headers: {
@@ -26,7 +26,7 @@ export const createEvent = createAsyncThunk(
       };
       const response = await axios.post(
         `${backendURL}/event/create`,
-        { title, description, location, creator },
+        { title, description, location },
         config
       );
       return await response.data; // Assuming the API returns a string (e.g., a token)

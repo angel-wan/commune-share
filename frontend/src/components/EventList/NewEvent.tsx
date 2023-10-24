@@ -54,6 +54,7 @@ const NewEvent = () => {
         description: "Descripio",
         location: "HK",
         creator: user?.id as string,
+        
       })
     );
   }, []);

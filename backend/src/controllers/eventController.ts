@@ -11,9 +11,15 @@ const isUserExist = async (userId: string) => {
   const user = await User.findOne({ _id: userId });
   return !!user;
 };
+
+const isAdmin = async (userId: string) => {
+  const user = await User.findOne({ _id: userId });
+  return user && user.username === 'admin';
+};
 // Create a new event
 export const createEvent = async (req: Request, res: Response) => {
   try {
+    console.log('create event');
     const { title, description, location } = req.body;
     const { _id } = req.user as { _id: string };
     const creator = _id;
@@ -21,20 +27,28 @@ export const createEvent = async (req: Request, res: Response) => {
     if (!req.body || !req.body.title) {
       return res.status(400).json({ error: 'Invalid request event data' });
     }
+    console.log('create even2');
+
     if (!title || !location) {
       throw new Error('All fields are required');
     }
     // 5 character with alpherbic and number code generator
-    let code = Math.random().toString(36).substr(2, 5);
-    while (Event.findOne({ code })) {
+    let isCodeUnique = false;
+    let code;
+    while (!isCodeUnique) {
       code = Math.random().toString(36).substr(2, 5);
+      // Check if the code already exists in the database
+      const existingEvent = await Event.findOne({ code });
+      if (!existingEvent) {
+        isCodeUnique = true; // Exit the loop if the code is unique
+      }
     }
     const event = new Event({ title, description, location, creator, code });
     await event.save();
 
     res.status(201).json({ event });
   } catch (error) {
-    res.status(500).json({ error: 'Event creation failed' });
+    res.status(500).json({ error: error });
   }
 };
 
@@ -104,9 +118,25 @@ export const listEvent = async (req: Request, res: Response) => {
 export const getEventById = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.params;
+    const { _id } = req.user as { _id: string };
+
+    // if user is admin or attendee of the event
     const event = await Event.findById(eventId);
+
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
+    }
+    if (await isAdmin(_id)) {
+      return res.json({ event });
+    }
+
+    if (event.creator.toString() !== _id.toString()) {
+      const attendee = event.attendees.find((attendee) => {
+        return attendee.userid.toString() === _id.toString();
+      });
+      if (!attendee) {
+        return res.status(401).json({ error: 'You Are Not Event Attendee' });
+      }
     }
     res.json({ event });
   } catch (error) {
@@ -117,7 +147,10 @@ export const getEventById = async (req: Request, res: Response) => {
 export const joinEventByCode = async (req: Request, res: Response) => {
   try {
     const { _id } = req.user as { _id: string };
-    await isUserExist(_id);
+    const userExist = await isUserExist(_id);
+    if (userExist) {
+      return res.status(404).json({ error: 'User not found' });
+    }
     const { code } = req.body;
     const event = await Event.findOne({ code });
     if (!event) {

@@ -1,9 +1,11 @@
 import { Box, Grid, Paper } from "@mui/material";
-import { Event } from "../../types/event.types";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useAppDispatch } from "../../app/hook";
 import { getEventById } from "../../feature/event/eventActions";
 import { EventState } from "../../feature/event/eventSlice";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+
 const months = [
   "JAN",
   "FEB",
@@ -27,10 +29,10 @@ const getFormattedTime = (date: Date) => {
 
 const EventItem = (props: { event: EventState }) => {
   const { event } = props;
-  console.log("items", event);
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const onSelectEvent = (event_id: string) => {
-    dispatch(getEventById(event_id));
+    navigate(`/events/${event_id}`);
   };
 
   return (
@@ -63,14 +65,17 @@ const EventItem = (props: { event: EventState }) => {
               new Date(event.eventStartDatetime).getDate()}
           </Grid>
           <Grid item>
-            {months[new Date(event.eventStartDatetime).getMonth()]}
+            {event.eventStartDatetime &&
+              months[
+                new Date(event.eventStartDatetime).getMonth()
+              ].toUpperCase()}
           </Grid>
         </Box>
       </Grid>
 
       <Grid item xs={2} component="h4" sx={{ px: 1 }}>
-        {getFormattedTime(event.eventStartDatetime)} -{" "}
-        {getFormattedTime(event.eventEndDatetime)}
+        {event.eventStartDatetime && getFormattedTime(event.eventStartDatetime)}{" "}
+        - {event.eventEndDatetime && getFormattedTime(event.eventEndDatetime)}
       </Grid>
 
       <Grid item xs={6} sx={{ p: 1 }}>
