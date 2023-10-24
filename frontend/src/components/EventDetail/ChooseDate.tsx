@@ -1,48 +1,64 @@
 import dayjs, { Dayjs } from "dayjs";
+import React, { useState } from "react";
+import {
+  Container,
+  Button,
+} from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import React from "react";
-import { Container } from "@mui/material";
 
 export default function ChooseDate() {
-  const [value, setValue] = React.useState<Dayjs | null>(
-    dayjs("2023-04-17T15:30")
-  );
+  const maxTimeslots = 10;
+  const initialTimeslots = Array(4).fill(dayjs("2023-04-17T15:30"));
+
+  const [timeslots, setTimeslots] = useState<Dayjs[]>(initialTimeslots);
+  const [value, setValue] = useState<Dayjs | null>(dayjs("2023-04-17T15:30"));
+
+  const handleAddTimeslot = () => {
+    if (timeslots.length < maxTimeslots) {
+      setTimeslots([...timeslots, value]);
+      setValue(dayjs("2023-04-17T15:30")); // Reset the date picker
+    } else {
+      return null;
+    }
+  };
+
 
   return (
     <div>
       <Container>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            sx={{ display: "flex", padding: "5px" , marginBottom:'20px',}}
-            ampm={false}
-            label="Pick your date and time for the event"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-          <DateTimePicker
-            ampm={false}
-            label="Pick your date and time for the event"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-          <DateTimePicker
-            ampm={false}
-            label="Pick your date and time for the event"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-          <DateTimePicker
-            ampm={false}
-            label="Pick your date and time for the event"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
+          {timeslots.map((timeslot, index) => (
+            <DateTimePicker
+              key={index}
+              ampm={false}
+              label={`Pick timeslot #${index + 1}`}
+              value={timeslot}
+              onChange={(newValue) => {
+                const newTimeslots = [...timeslots];
+                newTimeslots[index] = newValue;
+                setTimeslots(newTimeslots);
+              }}
+            />
+          ))}
+          <Button
+            sx={{display:'flex', margin:'10px',}}
+            variant="outlined"
+            onClick={handleAddTimeslot}
+            disabled={timeslots.length >= maxTimeslots}
+          >
+            Add More Timeslot
+          </Button>
         </LocalizationProvider>
       </Container>
-      <p> newValue </p>
+      <p>
+        Selected Date and Time:
+        {timeslots.map((timeslot, index) => (
+          <span key={index}>{timeslot.format("YYYY-MM-DD HH:mm")}, </span>
+        ))}
+      </p>
+
     </div>
   );
 }
-''
