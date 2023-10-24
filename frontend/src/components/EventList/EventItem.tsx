@@ -61,21 +61,21 @@ const EventItem = (props: { event: EventState }) => {
           }}
         >
           <Grid item component="h2">
-            {event.eventStartDatetime &&
-              new Date(event.eventStartDatetime).getDate()}
+            {event.eventStartDate &&
+              new Date(event.eventStartDate).getDate()}
           </Grid>
           <Grid item>
-            {event.eventStartDatetime &&
+            {event.eventStartDate &&
               months[
-                new Date(event.eventStartDatetime).getMonth()
+                new Date(event.eventStartDate).getMonth()
               ].toUpperCase()}
           </Grid>
         </Box>
       </Grid>
 
       <Grid item xs={2} component="h4" sx={{ px: 1 }}>
-        {event.eventStartDatetime && getFormattedTime(event.eventStartDatetime)}{" "}
-        - {event.eventEndDatetime && getFormattedTime(event.eventEndDatetime)}
+        {event.eventStartDate && getFormattedTime(event.eventStartDate)}{" "}
+        - {event.eventEndDate && getFormattedTime(event.eventEndDate)}
       </Grid>
 
       <Grid item xs={6} sx={{ p: 1 }}>

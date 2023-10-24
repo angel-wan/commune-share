@@ -3,7 +3,6 @@ import EventListNavbar from "./EventListNavbar";
 import EventItem from "./EventItem";
 import JoinEvent from "./JoinEvent";
 import NewEvent from "./NewEvent";
-import { Event } from "../../types/event.types";
 import { useAppSelector, useAppDispatch } from "../../app/hook";
 import { useEffect } from "react";
 import { listEvents } from "../../feature/event/eventActions";

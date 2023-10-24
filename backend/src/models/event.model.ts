@@ -37,7 +37,7 @@ const AttendeeSchema = new Schema({
     enum: ['invited', 'joined'],
     default: 'invited',
   },
-})
+});
 // Define the event schema
 const eventSchema = new Schema({
   code: { type: String, required: true, unique: true },
@@ -49,8 +49,8 @@ const eventSchema = new Schema({
   votes: [VoteOptionSchema], // Use the VoteOption schema for the votes property
   schedule: [ScheduleSchema], // Include the schedule field
   createdAt: { type: Date, required: true, default: Date.now },
-  eventStartDatetime: { type: Date, required: false },
-  eventEndDatetime: { type: Date, required: false },
+  eventStartDate: { type: Date, required: false },
+  eventEndDate: { type: Date, required: false },
 });
 
 // Create a TypeScript interface to describe the event document
@@ -58,14 +58,15 @@ export interface EventDocument extends Document {
   title: string;
   description: string;
   location: string | null;
-  eventStartDatetime: Date | null;
-  eventEndDatetime: Date | null;
+  eventStartDate: Date | null;
+  eventEndDate: Date | null;
   code: string;
   creator: string;
   attendees: Array<AttendeeType>;
   votes: Array<VotesType>;
   schedule: Array<ScheduleType>;
   createdAt: Date;
+  date: TimeSlotType;
 }
 
 interface AttendeeType {

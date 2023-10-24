@@ -10,11 +10,6 @@ const authPersistConfig = {
   storage,
 };
 
-const eventPersistConfig = {
-  key: "event",
-  storage,
-};
-
 const authReducer = persistReducer(authPersistConfig, authSlice.reducer);
 // const eventReducer = persistReducer(eventPersistConfig, eventListSlice.reducer);
 const customizedMiddleware = getDefaultMiddleware({

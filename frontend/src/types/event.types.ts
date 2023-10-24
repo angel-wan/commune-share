@@ -1,8 +1,8 @@
 export type Event = {
     "_id": string;
     "title": string,
-    "eventStartDatetime": Date,
-    "eventEndDatetime": Date,
+    "eventStartDate": Date,
+    "eventEndDate": Date,
     "location": string,
     "description": string,
     "createdAt": Date,

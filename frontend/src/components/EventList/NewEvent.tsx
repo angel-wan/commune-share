@@ -54,7 +54,8 @@ const NewEvent = () => {
         description: "Descripio",
         location: "HK",
         creator: user?.id as string,
-        
+        eventStartDate: new Date(),
+        eventEndDate: new Date(new Date().getTime() + 60 * 60 * 1000),
       })
     );
   }, []);

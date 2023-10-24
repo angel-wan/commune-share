@@ -21,8 +21,8 @@ export interface EventState {
   title: string;
   description: string;
   location?: string | null;
-  eventStartDatetime?: Date;
-  eventEndDatetime?: Date;
+  eventStartDate?: Date;
+  eventEndDate?: Date;
   code: string;
   creator: string;
   attendees?: Array<AttendeeType>;

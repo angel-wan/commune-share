@@ -9,6 +9,8 @@ export interface EventData {
   description: string;
   location: string | null;
   creator: string;
+  eventStartDate?: Date;
+  eventEndDate?: Date;
   // attendees: Array<AttendeeType>;
   // votes: Array<VotesType>;
   // schedule: Array<ScheduleType>;
@@ -150,7 +152,7 @@ export const joinEventByCode = createAsyncThunk(
         },
       };
 
-      const response = await axios.put(
+      const response = await axios.post(
         `${backendURL}/event/code`,
         { code },
         config
