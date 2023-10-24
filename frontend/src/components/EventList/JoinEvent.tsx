@@ -1,47 +1,27 @@
 import { useState, Fragment } from "react";
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogProps,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  SelectChangeEvent,
   TextField,
-  MenuItem,
-  FormControlLabel,
-  Switch,
 } from "@mui/material";
 
 const JoinEvent = () => {
   const [open, setOpen] = useState(false);
-  const [fullWidth, setFullWidth] = useState(true);
-  const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClickClose = () => {
     setOpen(false);
   };
 
-  const handleMaxWidthChange = (event: SelectChangeEvent<typeof maxWidth>) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value
-    );
-  };
-
-  const handleFullWidthChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFullWidth(event.target.checked);
+  const handleClickJoin = () => {
+    handleClickClose();
   };
 
   return (
@@ -51,23 +31,24 @@ const JoinEvent = () => {
       </Button>
       <Dialog
         fullWidth={true}
-        maxWidth={"lg"}
+        maxWidth={"md"}
         open={open}
-        onClose={handleClose}
+        onClose={handleClickClose}
       >
         <DialogTitle>Join Event</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth={true}
             id="standard-basic"
-            label="Event URL"
+            label="Event Code"
             variant="standard"
           />
         </DialogContent>
+        {/* <DialogContentText>Event Joined</DialogContentText> */}
         <DialogActions>
-          <Button onClick={handleClose}>Send</Button>
+          <Button onClick={handleClickJoin}>Join</Button>
 
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClickClose}>Close</Button>
         </DialogActions>
       </Dialog>
     </Fragment>
