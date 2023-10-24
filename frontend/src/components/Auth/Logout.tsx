@@ -1,8 +1,8 @@
-import Button from "../Button";
 import { useAppDispatch } from "../../app/hook";
 import { useCallback } from "react";
 import { logoutUser } from "../../feature/auth/authSlice";
-const LogoutButton = () => {
+
+const Logout = () => {
   const dispatch = useAppDispatch();
 
   const logout = useCallback(() => {
@@ -10,6 +10,10 @@ const LogoutButton = () => {
     dispatch(logoutUser());
   }, []);
 
-  return <Button style={{}} handleOnClick={() => logout()} title="Logout" />;
+  return (
+    <span onClick={logout} style={{ cursor: "pointer" }}>
+      Logout
+    </span>
+  );
 };
-export default LogoutButton;
+export default Logout;

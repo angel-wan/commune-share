@@ -1,22 +1,19 @@
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import {
   Button,
   Dialog,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormControl,
   TextField,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
+import SignUp from "./SignUp";
 
 const Login = () => {
   const { loading, userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
-  const previousUserInfo = useRef(userInfo);
-  const previousLoading = useRef(loading);
 
   const [open, setOpen] = useState(userInfo === undefined);
   const [errorMsg, setErrorMsg] = useState("");
@@ -26,20 +23,16 @@ const Login = () => {
   });
 
   useEffect(() => {
-    console.log("useEffect: userInfo - ", userInfo, ", loading - ", loading);
-
-    // Login / Logout
-    if (
-      loading !== previousLoading.current &&
-      userInfo === previousUserInfo.current
-    ) {
-      console.log("useEffect: Invalid");
+    if (!loading && userInfo === undefined) {
       setErrorMsg("Invalid email or password");
-    } else {
-      console.log("useEffect: login/logout");
-      setOpen(userInfo === undefined);
     }
-  }, [userInfo, loading]);
+  }, [loading]);
+
+  useEffect(() => {
+    setOpen(userInfo === undefined);
+    setErrorMsg("");
+    loginData.password = "";
+  }, [userInfo]);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({ ...loginData, [event.target.id]: event.target.value });
@@ -51,18 +44,7 @@ const Login = () => {
       return;
     }
     dispatch(loginUser(loginData));
-    // console.log("email 1", loginData.email);
-    // if (userInfo) {
-    //   console.log("email 2", loginData.email);
-    //   console.log("username", userInfo.username);
-    //   setOpen(false);
-    // } else {
-    //   console.log("email 3", loginData.email);
-    //   setErrorMsg("Invalid email or password");
-    // }
   };
-
-  const handleClickSignUp = () => {};
 
   return (
     <Fragment>
@@ -123,9 +105,7 @@ const Login = () => {
 
           <DialogContentText>
             Don't have an account?
-            <Button variant="text" onClick={handleClickSignUp}>
-              Sign up
-            </Button>
+            <SignUp />
           </DialogContentText>
         </DialogContent>
       </Dialog>

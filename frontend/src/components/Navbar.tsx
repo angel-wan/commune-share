@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-
 import {
   AppBar,
   Box,
@@ -12,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Logout from "./Auth/Logout";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -96,6 +96,9 @@ const Navbar = () => {
               <MenuItem onClick={handleClickUserProfile}>User Profile</MenuItem>
               <MenuItem onClick={handleClickSplitExpense}>
                 Split Expense
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Logout />
               </MenuItem>
             </Menu>
           </div>

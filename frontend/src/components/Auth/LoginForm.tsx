@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
-import LogoutButton from "./LogoutButton";
+import Logout from "./Logout";
 const LoginForm = () => {
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
@@ -26,7 +26,7 @@ const LoginForm = () => {
     return (
       <div>
         Logged in as {userInfo.username}
-        <LogoutButton />
+        <Logout />
       </div>
     );
   }

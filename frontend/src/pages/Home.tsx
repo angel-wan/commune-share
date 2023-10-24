@@ -8,9 +8,9 @@ const Home = () => {
     <>
       <Login />
       {/* <RegisterForm /> */}
-      <LoginForm />
+      {/* <LoginForm /> */}
       <EventList />
-      <Dashboard />
+      {/* <Dashboard /> */}
     </>
   );
 };
