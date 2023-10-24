@@ -6,35 +6,8 @@ import JoinEvent from "./JoinEvent";
 import NewEvent from "./NewEvent";
 import { Event } from "../../types/event.types";
 import { useAppSelector } from "../../app/hook";
-const tempEvents: Event[] = [
-  {
-    eid: 1000,
-    title: "Dinner With A",
-    time_start: new Date(2023, 9, 16, 12, 30, 0),
-    time_end: new Date(2023, 9, 16, 14, 30, 0),
-    location: "A Home",
-    status: 0,
-  },
-  {
-    eid: 1001,
-    title: "Dinner With B",
-    time_start: new Date(2023, 10, 24, 17, 30, 0),
-    time_end: new Date(2023, 10, 24, 20, 0, 0),
-    location: "Finch",
-    status: 0,
-  },
-  {
-    eid: 1002,
-    title: "Dinner With C",
-    time_start: new Date(2023, 11, 28, 12, 30, 0),
-    time_end: new Date(2023, 11, 28, 19, 30, 0),
-    location: "Cantek",
-    status: 0,
-  },
-];
 
 const EventList = () => {
-  const [events, setEvents] = useState(tempEvents);
   const eventList = useAppSelector((state) => state.event.list);
   console.log("eventList", eventList);
   return (
@@ -66,8 +39,8 @@ const EventList = () => {
 
       <Grid item>
         <List>
-          {eventList.map((event) => (
-            <ListItem>
+          {eventList.map((event, index) => (
+            <ListItem key={`${event._id}.${index}`}>
               <EventItem event={event} />
             </ListItem>
           ))}

@@ -5,6 +5,7 @@ import {
   removeEvent,
   updateEvent,
   joinEventByCode,
+  getEventById,
 } from "./eventActions";
 
 export interface EventListState {
@@ -16,6 +17,7 @@ export interface EventListState {
 }
 
 export interface EventState {
+  _id: string;
   title: string;
   description: string;
   location?: string | null;
@@ -24,8 +26,8 @@ export interface EventState {
   code: string;
   creator: string;
   attendees?: Array<AttendeeType>;
-  votes?: Array<VotesType> ;
-  schedule: Array<ScheduleType> ;
+  votes?: Array<VotesType>;
+  schedule?: Array<ScheduleType>;
   createdAt: Date;
 }
 
@@ -94,7 +96,14 @@ export const eventListSlice = createSlice({
       state.success = false;
     });
     builder.addCase(updateEvent.fulfilled, (state, action) => {
-      state.selectedEvent = action.payload.event;
+      state.loading = false;
+      state.list = state.list.map((event) => {
+        if (event.title === action.payload.event.title) {
+          return action.payload.event;
+        }
+        return event;
+      });
+      state.success = true;
     });
     builder.addCase(updateEvent.rejected, (state, action) => {
       state.error = action.payload as string;
@@ -144,6 +153,21 @@ export const eventListSlice = createSlice({
       state.success = true;
     });
     builder.addCase(joinEventByCode.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+
+    builder.addCase(getEventById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getEventById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.selectedEvent = action.payload.event;
+      state.success = true;
+    });
+    builder.addCase(getEventById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
     });

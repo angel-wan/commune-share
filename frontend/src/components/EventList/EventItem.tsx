@@ -1,11 +1,9 @@
 import { Box, Grid, Paper } from "@mui/material";
 import { Event } from "../../types/event.types";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-
-interface EventItemProp {
-  event: Event;
-}
-
+import { useAppDispatch } from "../../app/hook";
+import { getEventById } from "../../feature/event/eventActions";
+import { EventState } from "../../feature/event/eventSlice";
 const months = [
   "JAN",
   "FEB",
@@ -27,9 +25,12 @@ const getFormattedTime = (date: Date) => {
   return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
-const EventItem: React.FC<EventItemProp> = ({ event }) => {
-  const onSelectEvent = (event: Event) => {
-    console.log("event", event);
+const EventItem = (props: { event: EventState }) => {
+  const { event } = props;
+  console.log("items", event);
+  const dispatch = useAppDispatch();
+  const onSelectEvent = (event_id: string) => {
+    dispatch(getEventById(event_id));
   };
 
   return (
@@ -43,8 +44,9 @@ const EventItem: React.FC<EventItemProp> = ({ event }) => {
       spacing={0}
       sx={{
         p: 1,
+        cursor: "pointer",
       }}
-      onClick={() => onSelectEvent(event)}
+      onClick={() => onSelectEvent(event._id)}
     >
       <Grid item xs={2}>
         <Box
@@ -57,7 +59,8 @@ const EventItem: React.FC<EventItemProp> = ({ event }) => {
           }}
         >
           <Grid item component="h2">
-            {new Date(event.eventStartDatetime).getDate()}
+            {event.eventStartDatetime &&
+              new Date(event.eventStartDatetime).getDate()}
           </Grid>
           <Grid item>
             {months[new Date(event.eventStartDatetime).getMonth()]}

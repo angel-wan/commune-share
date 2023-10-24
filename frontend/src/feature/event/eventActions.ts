@@ -60,6 +60,29 @@ export const listEvents = createAsyncThunk(
   }
 );
 
+export const getEventById = createAsyncThunk(
+  "event/getbyid",
+  async (eventId: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        `${backendURL}/event/${eventId}`,
+        config
+      );
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 export const removeEvent = createAsyncThunk(
   "event/remove",
   async (eventId: string, { rejectWithValue }) => {
