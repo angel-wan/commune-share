@@ -6,11 +6,11 @@ import Polling from "../components/EventDetail/Polling";
 const EventDetail = () => {
 
     return (
-        <div>
-            <h1> Event Details</h1>
-            <ChooseDate />
-        </div>
-
+      <div>
+        <h1> Event Details</h1>
+        <EventInfo />
+        <ChooseDate />
+      </div>
     );
 };
 

@@ -27,7 +27,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="user-profile" element={<UserProfile />} />
             <Route path="split-expense" element={<SplitExpense />} />
-            <Route path="event-detail" element={<EventDetail />} />
+            <Route path="events" element={<EventDetail />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
