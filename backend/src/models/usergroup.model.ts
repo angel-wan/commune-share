@@ -15,14 +15,10 @@ const userGroupSchema = new Schema({
 });
 
 // Create a TypeScript interface to describe the user document
-interface UserGroupDocument extends Document {
-  users: Array<AttendeeType>;
+export interface UserGroupDocument extends Document {
+  users: Array<string>;
   code: string;
   creator: string;
-}
-
-interface AttendeeType {
-  userid: string;
 }
 
 // Create the User model

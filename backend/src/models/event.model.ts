@@ -69,16 +69,13 @@ export interface EventDocument extends Document {
   eventEndDate: Date | null;
   code: string;
   creator: string;
-  attendees: Array<AttendeeType>;
   votes: Array<VotesType>;
   schedule: Array<ScheduleType>;
   createdAt: Date;
   date: TimeSlotType;
   status: EventStatus;
+  usergroupId: string;
 }
-
-
-
 
 export interface VotesType {
   title: string;
