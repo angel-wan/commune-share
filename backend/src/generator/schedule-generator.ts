@@ -28,6 +28,7 @@ const ScheduleGenerator = async (ids: string[]) => {
         location: faker.address.city(),
         creator: ids[Math.floor(Math.random() * ids.length)],
         schedule: fakeSchedules,
+        code: faker.random.alphaNumeric(6),
       };
 
       fakeEvents.push(new Event(fakeEvent));

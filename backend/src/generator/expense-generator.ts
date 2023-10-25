@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import Event, { VotesType, ScheduleType, Period } from '../models/event.model';
-import Expense, { ExpenseDocument, ExpenseType } from '../models/expense.model';
+import { Expense, ExpenseDocument, ExpenseType, UserExpense, UserExpenseDocument } from '../models/expense.model';
 
 const ExpenseGenerator = async (ids: string[], userids: string[]) => {
   try {
@@ -17,21 +17,29 @@ const ExpenseGenerator = async (ids: string[], userids: string[]) => {
     if (!event) {
       throw new Error('Event not found');
     }
+    const fakeUserExpense: UserExpenseDocument = new UserExpense({
+      user: userids[Math.floor(Math.random() * userids.length)],
+      title: 'fake expense item',
+      amount: 15,
+    });
     const fakeExpense: ExpenseDocument = new Expense({
       title: 'fake expense',
       type: ExpenseType.GROUP,
-      user: userid,
-      expenses: [{ user: userids[Math.floor(Math.random() * userids.length)], title: 'fake expense item', amount: 15 }],
+      creator: userid,
+      expenses: [fakeUserExpense],
     });
 
+    const fakeEventUserExpense: UserExpenseDocument = new UserExpense({
+      user: userids[Math.floor(Math.random() * userids.length)],
+      title: 'fake event expense item',
+      amount: 35,
+    });
     const fakeEventExpense: ExpenseDocument = new Expense({
       title: 'fake event expense',
       type: ExpenseType.EVENT,
       event: event.id,
-      user: userid,
-      expenses: [
-        { user: userids[Math.floor(Math.random() * userids.length)], title: 'fake event expense item', amount: 35 },
-      ],
+      creator: userid,
+      expenses: [fakeEventUserExpense],
     });
 
     console.log('fakeExpense', fakeExpense);
@@ -39,9 +47,8 @@ const ExpenseGenerator = async (ids: string[], userids: string[]) => {
 
     const expense = await fakeExpense.save();
     const eventExpense = await fakeEventExpense.save();
-
-    const expenseId = Object.values(expense.id);
-    const eventExpenseId = Object.values(eventExpense.id);
+    const expenseId = Object.values(expense._id);
+    const eventExpenseId = Object.values(eventExpense._id);
     return [{ expenseId }, { eventExpenseId }];
   } catch (error) {
     console.error('Error generating fake expense data:', error);

@@ -7,6 +7,7 @@ import './passport.config';
 import { MONGO_URI } from './config';
 import eventRouter from './routes/event.route';
 import cors from 'cors';
+import expenseRouter from './routes/expense.route';
 
 const app: Application = express();
 
@@ -46,3 +47,4 @@ app.get('/help', (req: Request, res: Response) => {
 
 app.use('/user', userRouter);
 app.use('/event', eventRouter);
+app.use('/expense', expenseRouter);
