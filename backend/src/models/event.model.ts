@@ -8,6 +8,12 @@ export enum Period {
   ALL_DAY = 'ALL_DAY',
 }
 
+export enum EventStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  PAST = 'PAST',
+}
+
 const VoteOptionSchema = new Schema({
   //   option: { type: String, required: false },
   //   votes: { type: Array<Schema.Types.ObjectId>, default: [] }, // Use default [] to represent 0 votes

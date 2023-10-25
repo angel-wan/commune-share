@@ -51,7 +51,14 @@ const EventList = () => {
       <Grid item>
         <List>
           {eventList.map((event, index) => {
-            if (barStatus === "UPCOMING") {
+            if (barStatus === "UPCOMING" && event.status === "UPCOMING") {
+              return (
+                <ListItem key={`${event._id}.${index}`}>
+                  <EventItem event={event} />
+                </ListItem>
+              );
+            }
+            if (barStatus === "PENDING" && event.status === "PENDING") {
               return (
                 <ListItem key={`${event._id}.${index}`}>
                   <EventItem event={event} />

@@ -29,6 +29,7 @@ export interface EventState {
   votes?: Array<VotesType>;
   schedule?: Array<ScheduleType>;
   createdAt: Date;
+  status: "PENDING" | "UPCOMING" | "PAST";
 }
 
 export interface ScheduleType {
