@@ -10,6 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import SignUp from "./SignUp";
+import { listEvents } from "../../feature/event/eventActions";
 
 const Login = () => {
   const { loading, userInfo } = useAppSelector((state) => state.auth);
@@ -38,7 +39,7 @@ const Login = () => {
     setLoginData({ ...loginData, [event.target.id]: event.target.value });
   };
 
-  const handleClickLogin = () => {
+  const handleClickLogin = async () => {
     if (!loginData.email || !loginData.password) {
       setErrorMsg("Email or password is missing.");
       return;

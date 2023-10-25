@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser } from "./authActions";
+import { loginUser, registerUser, logoutUser } from "./authActions";
 
 interface AuthState {
+  isAuthenticated: boolean;
   loading: boolean;
   userInfo?: {
     id: string;
@@ -13,6 +14,7 @@ interface AuthState {
 }
 
 const initialState = {
+  isAuthenticated: false,
   loading: false,
   error: null,
   success: false, // for monitoring the registration process.
@@ -22,9 +24,6 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logoutUser: (state) => {
-      state.userInfo = undefined;
-    },
     setCredentials: (state, { payload }) => {
       state.userInfo = payload;
     },
@@ -38,6 +37,7 @@ export const authSlice = createSlice({
     builder.addCase(registerUser.fulfilled, (state: AuthState, action) => {
       state.loading = false;
       state.userInfo = action.payload.user;
+      state.isAuthenticated = true;
       state.success = true;
     });
     builder.addCase(registerUser.rejected, (state: AuthState, action) => {
@@ -55,9 +55,26 @@ export const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state: AuthState, action) => {
       state.loading = false;
       state.userInfo = action.payload.user;
+      state.isAuthenticated = true;
       state.success = true;
     });
     builder.addCase(loginUser.rejected, (state: AuthState, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+
+    builder.addCase(logoutUser.pending, (state: AuthState) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(logoutUser.fulfilled, (state: AuthState, action) => {
+      state.loading = false;
+      state.userInfo = action.payload.userInfo;
+      state.isAuthenticated = action.payload.isAuthenticated;
+      state.success = true;
+    });
+    builder.addCase(logoutUser.rejected, (state: AuthState, action) => {
       state.loading = false;
       state.error = action.payload as string;
     });
@@ -67,7 +84,8 @@ export const authSlice = createSlice({
 });
 
 export const selectAuth = (state: AuthState) => state.userInfo;
+export const isAuthenticated = (state: AuthState) => state.isAuthenticated;
 
-export const {logoutUser, setCredentials } = authSlice.actions;
+export const { setCredentials } = authSlice.actions;
 
 export default authSlice;

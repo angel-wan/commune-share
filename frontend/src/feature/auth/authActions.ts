@@ -64,3 +64,14 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  try {
+    // remove the cookie that contains the jwt
+    localStorage.removeItem("persist:auth");
+
+    // remove the user from the redux store
+    return { userInfo: undefined, isAuthenticated: false };
+  } catch (error) {
+    console.log(error);
+  }
+});

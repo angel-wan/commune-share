@@ -6,6 +6,7 @@ import EventGenerator from './event-generator';
 import VoteGenerator from './vote-generator';
 import ScheduleGenerator from './schedule-generator';
 import ExpenseGenerator from './expense-generator';
+import userGroupGenerator from './usergroup-generator';
 // Import your User model here
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -23,6 +24,8 @@ db.once('open', async () => {
   if (!userids) {
     throw new Error('No user ids');
   }
+
+  const userGroup = await userGroupGenerator(userids);
   const eventids = await EventGenerator(userids);
   if (!eventids) {
     throw new Error('No event ids');

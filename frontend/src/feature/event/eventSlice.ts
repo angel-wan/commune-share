@@ -29,6 +29,7 @@ export interface EventState {
   votes?: Array<VotesType>;
   schedule?: Array<ScheduleType>;
   createdAt: Date;
+  status: "PENDING" | "UPCOMING" | "PAST";
 }
 
 export interface ScheduleType {
@@ -73,7 +74,11 @@ export const eventListSlice = createSlice({
   name: "eventList",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
-  reducers: {},
+  reducers: {
+    clearEventList: (state) => {
+      state.list = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(createEvent.pending, (state) => {
       state.loading = true;
@@ -173,5 +178,5 @@ export const eventListSlice = createSlice({
     });
   },
 });
-
+export const clearEventList = eventListSlice.actions.clearEventList;
 export default eventListSlice.reducer;
