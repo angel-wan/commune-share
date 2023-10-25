@@ -13,6 +13,11 @@ export const register = async (req: Request, res: Response) => {
     if (!username || !email || !password) {
       throw new Error('All fields are required');
     }
+
+    const findUsername = await User.findOne({ username });
+    if (findUsername) {
+      throw new Error('Username already exists');
+    }
     const user = new User({ username, email, password });
     await user.save();
 
@@ -57,7 +62,7 @@ export const logout = async (req: Request, res: Response) => {
   try {
     // Destroy the user's session to log them out
     // remove the cookie that contains the jwt
-    console.log('remove')
+    console.log('remove');
     localStorage.removeItem('persist:auth');
     return res.json({ message: 'Logout successful' });
   } catch (error) {

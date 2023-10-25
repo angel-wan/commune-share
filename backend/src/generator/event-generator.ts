@@ -21,6 +21,7 @@ const EventGenerator = async (ids: string[]) => {
         eventStartDate: startDate,
         eventEndDate: endDate,
         code: faker.random.alphaNumeric(6),
+        status: Math.random() > 0.5 ? 'pending' : 'completed',
       };
 
       fakeEvents.push(new Event(fakeEvent));

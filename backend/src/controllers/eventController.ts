@@ -45,7 +45,7 @@ export const createEvent = async (req: Request, res: Response) => {
       userid: creator,
       status: 'joined',
     };
-    const event = new Event({ title, description, location, creator, code, attendees });
+    const event = new Event({ title, description, location, creator, code, attendees, status: 'pending' });
     await event.save();
 
     res.status(201).json({ event });
@@ -173,7 +173,7 @@ export const joinEventByCode = async (req: Request, res: Response) => {
     });
 
     await event.save();
-    res.status(200).json({ message: 'Join event successful' });
+    res.status(200).json({ event });
   } catch (error) {
     res.status(500).json({ error: 'Error joining events' });
   }

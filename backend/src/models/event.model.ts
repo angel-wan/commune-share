@@ -51,6 +51,7 @@ const eventSchema = new Schema({
   createdAt: { type: Date, required: true, default: Date.now },
   eventStartDate: { type: Date, required: false },
   eventEndDate: { type: Date, required: false },
+  status: { type: String, required: true, enum: ['pending', 'completed'], default: 'pending' },
 });
 
 // Create a TypeScript interface to describe the event document
@@ -67,6 +68,7 @@ export interface EventDocument extends Document {
   schedule: Array<ScheduleType>;
   createdAt: Date;
   date: TimeSlotType;
+  status: 'pending' | 'completed';
 }
 
 interface AttendeeType {
