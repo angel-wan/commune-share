@@ -155,24 +155,26 @@ export const joinEventByCode = async (req: Request, res: Response) => {
     const { code } = req.body;
     const event = await Event.findOne({ code });
 
-    console.log('code', code);
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
 
-    if (event.creator.toString() === userId.toString()) {
+    const usergroup = await EventGroup.findOne({ _id: event.usergroupId });
+
+    if (!usergroup) {
+      return res.status(404).json({ error: 'Group not found' });
+    }
+
+    if (usergroup.creator.toString() === userId.toString()) {
       return res.status(401).json({ error: 'You Are Event Creator' });
     }
-    if (event.attendees.find((attendee) => attendee.userid.toString() === userId.toString())) {
+
+    if (usergroup.users.find((attendee) => attendee.toString() === userId.toString())) {
       return res.status(401).json({ error: 'You Are Already Attendee' });
     }
 
-    event.attendees.push({
-      userid: userId,
-      status: 'joined',
-    });
-
-    await event.save();
+    usergroup.users.push(userId);
+    await usergroup.save();
     res.status(200).json({ event });
   } catch (error) {
     res.status(500).json({ error: 'Error joining events' });

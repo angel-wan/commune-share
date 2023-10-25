@@ -35,15 +35,6 @@ const ScheduleSchema = new Schema({
   ],
 });
 
-const AttendeeSchema = new Schema({
-  userid: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  status: {
-    type: String,
-    required: true,
-    enum: ['invited', 'joined'],
-    default: 'invited',
-  },
-});
 // Define the event schema
 const eventSchema = new Schema({
   code: { type: String, required: true, unique: true },
@@ -51,16 +42,17 @@ const eventSchema = new Schema({
   description: { type: String, required: false, unique: false },
   location: { type: String, required: false },
   creator: { type: Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who created the event
-  attendees: [AttendeeSchema],
   votes: [VoteOptionSchema], // Use the VoteOption schema for the votes property
   schedule: [ScheduleSchema], // Include the schedule field
   createdAt: { type: Date, required: true, default: Date.now },
   eventStartDate: { type: Date, required: false },
   eventEndDate: { type: Date, required: false },
   status: { type: String, required: true, enum: ['pending', 'completed'], default: 'pending' },
+  usergroupId: { type: Schema.Types.ObjectId, ref: 'UserGroup' },
 });
 
 // Create a TypeScript interface to describe the event document
+
 export interface EventDocument extends Document {
   title: string;
   description: string;
