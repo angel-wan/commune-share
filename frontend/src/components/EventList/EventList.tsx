@@ -4,18 +4,23 @@ import EventItem from "./EventItem";
 import JoinEvent from "./JoinEvent";
 import NewEvent from "./NewEvent";
 import { useAppSelector, useAppDispatch } from "../../app/hook";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { listEvents } from "../../feature/event/eventActions";
-
+import Login from "../Auth/Login";
+import { shallowEqual } from "react-redux";
+import { isAuthenticated } from "../../feature/auth/authSlice";
 
 const EventList = () => {
-  const eventList = useAppSelector((state) => state.event.list);
+  const eventList = useAppSelector((state) => state.event.list, shallowEqual);
   const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.auth);
-  console.log("eventList", eventList);
+  const [barStatus, setBarStatus] = useState("UPCOMING");
+
   useEffect(() => {
     dispatch(listEvents());
-  }, []);
+    console.log("EventList - useEffect - userInfo", eventList);
+  }, [userInfo]);
+
   return (
     <Grid container direction="column">
       <Grid item container direction="row" alignItems="center" padding={2}>
@@ -40,16 +45,20 @@ const EventList = () => {
       </Grid>
 
       <Grid item px={2}>
-        <EventListNavbar />
+        <EventListNavbar setBarStatus={setBarStatus} barStatus={barStatus} />
       </Grid>
 
       <Grid item>
         <List>
-          {eventList.map((event, index) => (
-            <ListItem key={`${event._id}.${index}`}>
-              <EventItem event={event} />
-            </ListItem>
-          ))}
+          {eventList.map((event, index) => {
+            if (barStatus === "UPCOMING") {
+              return (
+                <ListItem key={`${event._id}.${index}`}>
+                  <EventItem event={event} />
+                </ListItem>
+              );
+            }
+          })}
         </List>
       </Grid>
     </Grid>

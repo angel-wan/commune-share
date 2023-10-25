@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import Logout from "./Logout";
+import { listEvents } from "../../feature/event/eventActions";
 const LoginForm = () => {
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
@@ -16,11 +17,14 @@ const LoginForm = () => {
     setLoginData({ ...loginData, [event.target.id]: event.target.value });
   };
 
-  const submitHandler = () => {
+  const submitHandler = useCallback(() => {
     // dispatch(registerUser(registerData));
     // TODO: Dispatch registerUser action
     dispatch(loginUser(loginData));
-  };
+    dispatch(listEvents());
+    console.log("loginData", loginData);
+    // refresh the page
+  }, []);
 
   if (userInfo) {
     return (

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 
-const EventListNavbar = () => {
+const EventListNavbar = (props) => {
+  const { setBarStatus, barStatus } = props;
   const [navbar_1, setNavbar_1] = useState(0);
   const [navbar_2, setNavbar_2] = useState(10);
 
@@ -9,7 +10,8 @@ const EventListNavbar = () => {
     event: React.SyntheticEvent,
     newValue: number
   ) => {
-    setNavbar_1(newValue);
+    // setNavbar_1(newValue);
+    setBarStatus(newValue);
     console.log(newValue);
     console.log(event);
   };
@@ -26,14 +28,14 @@ const EventListNavbar = () => {
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={navbar_1}
+          value={barStatus}
           onChange={handleChangeNavbar_1}
           aria-label="Event List Nav Bar"
           variant="fullWidth"
         >
-          <Tab label="Upcoming Events" value={0} />
-          <Tab label="Pending Events" value={1} />
-          <Tab label="Past Events" value={4} />
+          <Tab label="Upcoming Events" value={"UPCOMING"} />
+          <Tab label="Pending Events" value={"PENDING"} />
+          <Tab label="Past Events" value={"PAST"} />
         </Tabs>
       </Box>
       {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

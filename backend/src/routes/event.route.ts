@@ -8,7 +8,7 @@ eventRouter.get('/:eventId', requireAuth, getEventById);
 
 // protected route
 eventRouter.put('/update', requireAuth, updateEvent);
-eventRouter.put('/remove', requireAuth, removeEvent);
+eventRouter.delete('/remove', requireAuth, removeEvent);
 
 eventRouter.post('/create', requireAuth, createEvent);
 eventRouter.post('/code', requireAuth, joinEventByCode);

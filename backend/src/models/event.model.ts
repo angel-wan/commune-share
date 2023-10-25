@@ -68,13 +68,11 @@ export interface EventDocument extends Document {
   schedule: Array<ScheduleType>;
   createdAt: Date;
   date: TimeSlotType;
-  status: 'pending' | 'completed';
+  status: EventStatus;
 }
 
-interface AttendeeType {
-  userid: string;
-  status: 'invited' | 'joined';
-}
+
+
 
 export interface VotesType {
   title: string;
