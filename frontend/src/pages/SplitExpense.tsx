@@ -1,8 +1,10 @@
+import { Container } from "@mui/material";
+
 const SplitExpense = () => {
   return (
-    <>
-      <p>SplitExpense</p>
-    </>
+    <Container>
+      
+    </Container>
   );
 };
 
