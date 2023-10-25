@@ -30,6 +30,7 @@ const EventDetail = () => {
   }
   return (
     <div>
+      <h1> Event Details</h1>
       {selectedEvent && (
         <Grid>
           <Grid>{selectedEvent._id}</Grid>
@@ -38,7 +39,6 @@ const EventDetail = () => {
           <Grid>Location: {selectedEvent.location}</Grid>
         </Grid>
       )}
-      <h1> Event Details</h1>
       <EventInfo />
       <ChooseDate />
     </div>

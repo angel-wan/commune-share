@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { Container, Button } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-// cimport { Container } from "@mui/material";
+// import { Container } from "@mui/material";
 import { DatePicker } from "rsuite";
 import isBefore from "date-fns/isBefore";
 import Dialog from "@mui/material/Dialog";
@@ -65,16 +62,16 @@ export default function ChooseDate() {
           <DialogContentText>
             Please choose a time slot for the selected date.
           </DialogContentText>
-          <Button onClick={() => handleTimeSlotSelection("AM 10:00-14:00")}>
-            AM 10:00-14:00
+          <Button onClick={() => handleTimeSlotSelection("Morning")}>
+            Morning
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("PM 14:00-18:00")}>
-            PM 14:00-18:00
+          <Button onClick={() => handleTimeSlotSelection("Afternoon")}>
+            Afternoon
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("NIGHT 18:00-22:00")}>
-            NIGHT 18:00-22:00
+          <Button onClick={() => handleTimeSlotSelection("Night")}>
+            Night
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("FULL DAY")}>
+          <Button onClick={() => handleTimeSlotSelection("Full Day")}>
             FULL DAY
           </Button>
         </DialogContent>
@@ -84,7 +81,7 @@ export default function ChooseDate() {
         <ul>
           {selectedDateAndTimeSlots.map((item, index) => (
             <li key={index}>
-              {`Date: ${item.date.toDateString()}, Time Slot: ${item.timeSlot}`}
+              {`Date: ${item.date.toDateString()}, Session: ${item.timeSlot}`}
             </li>
           ))}
         </ul>
