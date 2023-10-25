@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container, Button } from "@mui/material";
 import { DatePicker } from "rsuite";
-import isBefore from "date-fns/isBefore";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -18,6 +17,8 @@ const Label = (props) => {
     />
   );
 };
+
+
 
 export default function ChooseDate() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -44,16 +45,23 @@ export default function ChooseDate() {
       console.log("Data to be saved:", selectedDateAndTimeSlots);
     };
 
+    // const eventStartDate =  new Date(),
+    // const eventEndDate = new Date(new Date().getTime() + 60 * 60 * 1000),
+
+    const eventStartDate = new Date("2023-10-01");
+    const eventEndDate = new Date("2023-10-15");
+
+    const disableDate = (date) => { return date < eventStartDate || date > eventEndDate; };
   return (
     <div className="rs-theme-dark">
       <Container>
         <div className="rs-theme-dark">
           <Label style={{ display: "flex", marginTop: 10 }}>
-            Select date that you want:{" "}
+            Select date that you available:{" "}
           </Label>
           <DatePicker
             value={selectedDate} // Set the value prop to control the selected date
-            disabledDate={(date) => isBefore(date, new Date())}
+            disabledDate={disableDate}
             style={{ width: 200 }}
             onChange={handleDateChange}
           />
@@ -70,7 +78,9 @@ export default function ChooseDate() {
               ))}
             </ul>
           </div>
-          <Button variant="outlined" onClick={handleSave}>Save</Button>
+          <Button variant="outlined" onClick={handleSave}>
+            Save
+          </Button>
         </div>
       </Container>
       <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>

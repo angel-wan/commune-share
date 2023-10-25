@@ -51,7 +51,7 @@ const NewEvent = () => {
     dispatch(
       createEvent({
         title: "Front end",
-        description: "Descripio",
+        description: "Description",
         location: "HK",
         creator: user?.id as string,
         eventStartDate: new Date(),
