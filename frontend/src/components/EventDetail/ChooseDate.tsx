@@ -65,7 +65,6 @@ export default function ChooseDate(props: ChooseDateProps) {
 
   return (
     <div className="rs-theme-dark">
-      <Container>
         <div className="rs-theme-dark">
           <Label style={{ display: "flex", marginTop: 10 }}>
             Select date that you available:{" "}
@@ -85,24 +84,28 @@ export default function ChooseDate(props: ChooseDateProps) {
             <h2>All dates picked:</h2>
             <ul>
               {selectedDateAndTimeSlots.map((item, index) => (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex" , marginTop:"10px"}}>
                   <li key={index}>
                     {`Date: ${item.date.toDateString()}, Session: ${
                       item.timeSlot
                     }`}
                   </li>
-                  <Button onClick={() => removeSelectedDate(item)}>
+                  <Button
+                    variant="outlined"
+                    sx={{marginLeft: "10px"}}
+                    onClick={() => removeSelectedDate(item)}
+                  >
                     Remove
-                  </Button>
+                  </Button>          
+
                 </div>
               ))}
-            </ul>
+            </ul>                  
+            <Button variant="outlined" onClick={handleSave}>
+              Save
+            </Button>
           </div>
-          <Button variant="outlined" onClick={handleSave}>
-            Save
-          </Button>
         </div>
-      </Container>
       <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>Select Time Slot</DialogTitle>
         <DialogContent>
@@ -123,6 +126,6 @@ export default function ChooseDate(props: ChooseDateProps) {
           </Button>
         </DialogContent>
       </Dialog>
-    </div>
+</div>
   );
 }

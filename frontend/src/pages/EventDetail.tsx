@@ -47,15 +47,28 @@ const EventDetail = () => {
       <h1> Event Details</h1>
       {selectedEvent && (
         <Grid>
-          <Grid >{selectedEvent._id}</Grid>
-          <Grid sx={{margin: "10px"}}>Title: {selectedEvent.title}</Grid>
-          <Grid sx={{margin: "10px"}}>Description: {selectedEvent.description}</Grid>
-          <Grid sx={{margin: "10px"}}>Location: {selectedEvent.location}</Grid>
-          <Button onClick={handleRemoveEvent}>Remove</Button>
+          <Grid sx={{ display: "none" }}>{selectedEvent._id}</Grid>
+          <Grid sx={{ margin: "10px" }}>Title: {selectedEvent.title}</Grid>
+          <Grid sx={{ margin: "10px" }}>
+            Description: {selectedEvent.description}
+          </Grid>
+          <Grid sx={{ margin: "10px" }}>
+            Location: {selectedEvent.location}
+          </Grid>
+          <Button
+            variant="outlined"
+            onClick={handleRemoveEvent}
+            sx={{ margin: "10px" }}
+          >
+            Remove
+          </Button>
         </Grid>
       )}
       <EventInfo />
-      <ChooseDate eventStartDate={selectedEvent?.eventStartDate} eventEndDate={selectedEvent?.eventEndDate} />
+      <ChooseDate
+        eventStartDate={selectedEvent?.eventStartDate}
+        eventEndDate={selectedEvent?.eventEndDate}
+      />
       <EventDetailSetting />
     </div>
   );
