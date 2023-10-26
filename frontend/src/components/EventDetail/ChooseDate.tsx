@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Button } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 import { DatePicker } from "rsuite";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -78,44 +78,58 @@ export default function ChooseDate(props: ChooseDateProps) {
 
   return (
     <div className="rs-theme-dark">
-      <div className="rs-theme-dark">
-        <Label style={{ display: "flex", marginTop: 10 }}>
-          Select date that you available:{" "}
-        </Label>
-        <DatePicker
-          value={selectedDate} // Set the value prop to control the selected date
-          style={{ width: 200 }}
-          shouldDisableDate={(date) =>
-            isBefore(date, new Date(eventStartDate)) ||
-            isAfter(date, new Date(eventEndDate))
-          }
-          className="rs-theme-dark"
-          onChange={(date) => handleDateChange(date!)}
-        />
-        <br />
-        <div>
-          <h2>All dates picked:</h2>
-          <ul>
-            {selectedDateAndTimeSlots.map((item, index) => (
-              <div key={index} style={{ display: "flex", marginTop: "10px" }}>
-                <li>
-                  {`Date: ${item.date.toDateString()}, Session: ${item.period}`}
-                </li>
-                <Button
-                  variant="outlined"
-                  sx={{ marginLeft: "10px" }}
-                  onClick={() => removeSelectedDate(item)}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-          </ul>
-          <Button variant="outlined" onClick={handleSave}>
-            Save
-          </Button>
-        </div>
-      </div>
+      <Grid
+        sx={{
+          backgroundColor: "#1a1d24",
+          alignItems: "center",
+          border: "0.5px solid",
+          borderRadius: 4,
+          spacing: 0,
+          p: 1,
+          cursor: "pointer",
+        }}
+      >
+        <Grid sx={{ padding: "10px" }}>
+          <Label style={{ display: "flex", marginTop: 10 }}>
+            Select date that you available:{" "}
+          </Label>
+          <DatePicker
+            value={selectedDate} // Set the value prop to control the selected date
+            style={{ width: 200 }}
+            shouldDisableDate={(date) =>
+              isBefore(date, new Date(eventStartDate)) ||
+              isAfter(date, new Date(eventEndDate))
+            }
+            className="rs-theme-dark"
+            onChange={handleDateChange}
+          />
+          <br />
+          <div>
+            <h2>All dates picked:</h2>
+            <ul>
+              {selectedDateAndTimeSlots.map((item, index) => (
+                <div style={{ display: "flex", marginTop: "10px" }}>
+                  <li key={index}>
+                    {`Date: ${item.date.toDateString()}, Session: ${
+                      item.timeSlot
+                    }`}
+                  </li>
+                  <Button
+                    variant="outlined"
+                    sx={{ marginLeft: "10px" }}
+                    onClick={() => removeSelectedDate(item)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+            </ul>
+            <Button variant="outlined" onClick={handleSave}>
+              Save
+            </Button>
+          </div>
+        </Grid>
+      </Grid>
       <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>Select Time Slot</DialogTitle>
         <DialogContent>
@@ -136,6 +150,6 @@ export default function ChooseDate(props: ChooseDateProps) {
           </Button>
         </DialogContent>
       </Dialog>
-    </div>
+        </div>
   );
 }
