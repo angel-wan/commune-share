@@ -1,10 +1,10 @@
-import { Container } from "@mui/material";
-import NewExpense from "../components/SplitExpense/NewExpense";
+import SplitExpenseList from "../components/SplitExpense/SplitExpenseList";
+
 const SplitExpense = () => {
   return (
-    <Container>
-      <NewExpense />
-    </Container>
+    <>
+      <SplitExpenseList />
+    </>
   );
 };
 

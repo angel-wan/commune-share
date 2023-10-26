@@ -1,31 +1,22 @@
-import {
-  Box,
-  Tab,
-  Tabs,
-  Grid,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
+import { useEffect, useState } from "react";
+import { shallowEqual } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../app/hook";
+import { listExpense } from "../../feature/expense/expenseActions";
+import { Box, Tab, Grid, Typography } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import JoinExpense from "./JoinExpense";
 import NewExpense from "./NewExpense";
-import { useAppSelector, useAppDispatch } from "../../app/hook";
-import { useEffect, useState } from "react";
-import { listEvents } from "../../feature/event/eventActions";
-import { shallowEqual } from "react-redux";
 
 const SplitExpenseList = () => {
-  const eventList = useAppSelector((state) => state.event.list, shallowEqual);
+  const expenseList = useAppSelector((state) => state.expense, shallowEqual);
   const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state) => state.auth);
-  const [barStatus, setBarStatus] = useState("UPCOMING");
+  //const { userInfo } = useAppSelector((state) => state.auth);
   const [tabValue, setTabValue] = useState("1");
 
   useEffect(() => {
-    dispatch(listEvents());
-    console.log("EventList - useEffect - userInfo", eventList);
-  }, [userInfo]);
+    dispatch(listExpense());
+    console.log("EventList - useEffect - userInfo", expenseList);
+  }, []);
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);

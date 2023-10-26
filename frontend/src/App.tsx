@@ -11,8 +11,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
-// import SplitExpense from "./pages/SplitExpense";
-import SplitExpense from "./components/SplitExpense/SplitExpense";
+import SplitExpense from "./pages/SplitExpense";
 import EventDetail from "./pages/EventDetail";
 import Polling from "./components/EventDetail/Polling";
 
