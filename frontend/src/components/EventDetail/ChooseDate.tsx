@@ -20,7 +20,7 @@ const Label = (props) => {
 
 
 
-export default function ChooseDate() {
+export default function ChooseDate({ eventStartDate, eventEndDate }) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
@@ -41,17 +41,19 @@ export default function ChooseDate() {
     setSelectedDate(null); // Reset the selected date after choosing a time slot
   };
 
-    const handleSave = () => {
-      console.log("Data to be saved:", selectedDateAndTimeSlots);
-    };
+  const handleSave = () => {
+    console.log("Data to be saved:", selectedDateAndTimeSlots);
+  };
 
-    // const eventStartDate =  new Date(),
-    // const eventEndDate = new Date(new Date().getTime() + 60 * 60 * 1000),
+  // const eventStartDate =  new Date(),
+  // const eventEndDate = new Date(new Date().getTime() + 60 * 60 * 1000),
 
-    const eventStartDate = new Date("2023-10-01");
-    const eventEndDate = new Date("2023-10-15");
+  // const eventStartDate = new Date("2023-10-01");
+  // const eventEndDate = new Date("2023-10-15");
 
-    const disableDate = (date) => { return date < eventStartDate || date > eventEndDate; };
+  const disableDate = (date) => {
+    return date < eventStartDate || date > eventEndDate;
+  };
   return (
     <div className="rs-theme-dark">
       <Container>

@@ -23,6 +23,11 @@ const NewEvent = () => {
   const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
 
+  const [eventStartDate, setEventStartDate] = useState(new Date()); // Initialize with your desired start date
+  const [eventEndDate, setEventEndDate] = useState(
+    new Date(new Date().getTime() + 60 * 60 * 1000)
+  ); // Initialize with your desired end date
+
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.userInfo);
   const handleClickOpen = () => {
@@ -58,7 +63,7 @@ const NewEvent = () => {
         eventEndDate: new Date(new Date().getTime() + 60 * 60 * 1000),
       })
     );
-  }, []);
+  }, [eventStartDate, eventEndDate]);
 
   return (
     <Fragment>
