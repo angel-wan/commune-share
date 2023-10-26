@@ -12,6 +12,7 @@ export interface CreateExpenseType {
   title: string;
   type: ExpenseType;
 }
+
 export const createExpenseGroup = createAsyncThunk(
   "expense/create",
   async (data: CreateExpenseType, { rejectWithValue }) => {
@@ -27,6 +28,29 @@ export const createExpenseGroup = createAsyncThunk(
         `${backendURL}/expense`,
         { title, type },
         config
+      );
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const listExpense = createAsyncThunk(
+  "expense",
+  async (_, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await axios.get(
+        `${backendURL}/expense/`, config
       );
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
