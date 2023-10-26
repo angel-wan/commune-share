@@ -65,12 +65,15 @@ const EventDetail = () => {
             Location: {selectedEvent.location}
           </Grid>
           <Button variant="outlined" onClick={handleRemoveEvent} sx={{ margin: "10px" }} > Remove </Button>
+          <EventInfo />
+          <ChooseDate
+            eventStartDate={selectedEvent.eventStartDate}
+            eventEndDate={selectedEvent.eventEndDate}
+            event_id={selectedEvent._id}
+          />
+          <EventDetailSetting />
         </Grid>      
       )}
-      <ChooseDate
-        eventStartDate={selectedEvent?.eventStartDate}
-        eventEndDate={selectedEvent?.eventEndDate}
-      />
     </div>
   );
 };
