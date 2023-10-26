@@ -26,6 +26,7 @@ const Navbar = () => {
   };
 
   const handleClickHome = () => {
+    handleClose();
     navigate("/", {});
   };
 
@@ -93,7 +94,8 @@ const Navbar = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClickUserProfile}>User Profile</MenuItem>
+              {/* <MenuItem onClick={handleClickUserProfile}>User Profile</MenuItem> */}
+              <MenuItem onClick={handleClickHome}>My Events</MenuItem>
               <MenuItem onClick={handleClickSplitExpense}>
                 Split Expense
               </MenuItem>
