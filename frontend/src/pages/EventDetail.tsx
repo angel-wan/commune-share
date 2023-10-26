@@ -62,14 +62,15 @@ const EventDetail = () => {
           >
             Remove
           </Button>
+          <EventInfo />
+          <ChooseDate
+            eventStartDate={selectedEvent.eventStartDate}
+            eventEndDate={selectedEvent.eventEndDate}
+            event_id={selectedEvent._id}
+          />
+          <EventDetailSetting />
         </Grid>
       )}
-      <EventInfo />
-      <ChooseDate
-        eventStartDate={selectedEvent?.eventStartDate}
-        eventEndDate={selectedEvent?.eventEndDate}
-      />
-      <EventDetailSetting />
     </div>
   );
 };

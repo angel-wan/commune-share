@@ -36,8 +36,10 @@ export const createEvent = async (req: Request, res: Response) => {
     if (!req.body || !req.body.title) {
       return res.status(400).json({ error: 'Invalid request event data' });
     }
-    if (!title || !location) {
-      throw new Error('All fields are required');
+    if (!title) {
+      // throw new Error('Title are required');
+      return res.status(500).json({ error: "Title are required" });
+
     }
     // 5 character with alpherbic and number code generator
     let isCodeUnique = false;
