@@ -12,7 +12,7 @@ const EventDetail = () => {
   // get event id from url
   const dispatch = useAppDispatch();
   const { eventId } = useParams<{ eventId: string }>();
-  const { loading, error, success } = useAppSelector((state) => state.event);
+  const { loading, error } = useAppSelector((state) => state.event);
   const { removedEvent } = useAppSelector((state) => state.event);
   const navigate = useNavigate();
   useEffect(() => {

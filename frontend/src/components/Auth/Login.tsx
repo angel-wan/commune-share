@@ -10,15 +10,12 @@ import {
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import SignUp from "./SignUp";
-import { listEvents } from "../../feature/event/eventActions";
-import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { loading, userInfo, success, isAuthenticated } = useAppSelector(
     (state) => state.auth
   );
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const [open, setOpen] = useState(userInfo === undefined);
   const [errorMsg, setErrorMsg] = useState("");

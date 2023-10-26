@@ -59,7 +59,6 @@ export const createEvent = async (req: Request, res: Response) => {
       eventStartDate,
       eventEndDate,
       location,
-      creator,
       usergroupId,
       status: 'PENDING',
     });
