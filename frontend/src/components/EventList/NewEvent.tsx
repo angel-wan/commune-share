@@ -1,129 +1,157 @@
 import { useState, Fragment, useCallback } from "react";
+import { DateRange, DateRangeProps } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogProps,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  SelectChangeEvent,
-  MenuItem,
-  FormControlLabel,
-  Switch,
+  Grid,
+  TextField,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
-import { createEvent } from "../../feature/event/eventActions";
+import { createEvent, EventData } from "../../feature/event/eventActions";
+
 const NewEvent = () => {
-  const [open, setOpen] = useState(false);
-  const [fullWidth, setFullWidth] = useState(true);
-  const [maxWidth, setMaxWidth] = useState<DialogProps["maxWidth"]>("sm");
-
-  const [eventStartDate, setEventStartDate] = useState(new Date()); // Initialize with your desired start date
-  const [eventEndDate, setEventEndDate] = useState(
-    new Date(new Date().getTime() + 60 * 60 * 1000)
-  ); // Initialize with your desired end date
-
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.userInfo);
+  const { loading } = useAppSelector((state) => state.event);
+
+  const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [selection, setSelection] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
+  const initialEventData: EventData = {
+    title: "",
+    description: "",
+    location: "",
+    creator: user?.id ?? "",
+    eventStartDate: new Date(),
+    eventEndDate: new Date(),
+  };
+  const [eventData, setEventData] = useState(initialEventData);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setErrorMsg("");
+    setEventData(initialEventData);
     setOpen(false);
   };
 
-  const handleMaxWidthChange = (event: SelectChangeEvent<typeof maxWidth>) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value
-    );
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEventData({ ...eventData, [event.target.id]: event.target.value });
   };
 
-  const handleFullWidthChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFullWidth(event.target.checked);
+  const handleDateRange = (item: DateRangeProps) => {
+    setSelection([item.selection]);
   };
 
-  const handleSubmit = useCallback(() => {
-    console.log("submit");
-    dispatch(
-      createEvent({
-        title: "Front end",
-        description: "Description",
-        location: "HK",
-        creator: user?.id as string,
-        eventStartDate: new Date(),
-        eventEndDate: new Date(new Date().getTime() + 60 * 60 * 1000),
-      })
-    );
-  }, [eventStartDate, eventEndDate]);
+  const handleClickCreate = () => {
+    setErrorMsg("");
+    eventData.eventStartDate = selection[0].startDate;
+    eventData.eventEndDate = selection[0].endDate;
+
+    if (
+      !eventData.title ||
+      !eventData.eventStartDate ||
+      !eventData.eventEndDate
+    ) {
+      setErrorMsg("Username, email or password is missing.");
+      return;
+    }
+    console.log("SignUp - registerUser", eventData);
+    dispatch(createEvent(eventData));
+  };
 
   return (
     <Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
         New Event
       </Button>
-
-      <Dialog
-        fullWidth={true}
-        maxWidth={"lg"}
-        open={open}
-        onClose={handleClose}
-      >
-        <Button onClick={handleSubmit}>Submit</Button>
+      <Dialog fullWidth={true} maxWidth={"lg"} open={open}>
         <DialogTitle>Create New Event</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            You can set my maximum width and whether to adapt or not.
-          </DialogContentText>
-          <Box
-            noValidate
-            component="form"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              m: "auto",
-              width: "fit-content",
-            }}
-          >
-            <FormControl sx={{ mt: 2, minWidth: 120 }}>
-              <InputLabel htmlFor="max-width">maxWidth</InputLabel>
-              <Select
-                autoFocus
-                value={maxWidth}
-                onChange={handleMaxWidthChange}
-                label="maxWidth"
-                inputProps={{
-                  name: "max-width",
-                  id: "max-width",
-                }}
-              >
-                <MenuItem value={false as any}>false</MenuItem>
-                <MenuItem value="xs">xs</MenuItem>
-                <MenuItem value="sm">sm</MenuItem>
-                <MenuItem value="md">md</MenuItem>
-                <MenuItem value="lg">lg</MenuItem>
-                <MenuItem value="xl">xl</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControlLabel
-              sx={{ mt: 1 }}
-              control={
-                <Switch checked={fullWidth} onChange={handleFullWidthChange} />
-              }
-              label="Full width"
-            />
-          </Box>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="title"
+            label="Title"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={eventData.title}
+            onChange={handleInput}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="description"
+            label="Description"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={eventData.description}
+            onChange={handleInput}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="location"
+            label="Location"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={eventData.location}
+            onChange={handleInput}
+          />
+          <DialogContentText pt={2}>Possible Day Range:</DialogContentText>
+          <DateRange ranges={selection} onChange={handleDateRange} />
+          {errorMsg && (
+            <DialogContentText
+              sx={{
+                color: "#f14444",
+                width: "100%",
+                mt: "10px",
+              }}
+            >
+              {errorMsg}
+            </DialogContentText>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
+          <Grid container px={4} pb={3} spacing={2}>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                onClick={handleClickCreate}
+                disabled={loading}
+              >
+                Create
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                color="error"
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
     </Fragment>
