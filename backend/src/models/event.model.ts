@@ -47,6 +47,7 @@ const eventSchema = new Schema({
   eventEndDate: { type: Date, required: false },
   status: { type: String, required: true, enum: ['PENDING', 'UPCOMING'], default: 'PENDING' },
   usergroupId: { type: Schema.Types.ObjectId, ref: 'UserGroup' },
+  expenseId: { type: Schema.Types.ObjectId, ref: 'Expense' },
 });
 
 // Create a TypeScript interface to describe the event document
@@ -63,6 +64,7 @@ export interface EventDocument extends Document {
   date: TimeSlotType;
   status: EventStatus;
   usergroupId: string;
+  expenseId: string;
 }
 
 export interface VotesType {

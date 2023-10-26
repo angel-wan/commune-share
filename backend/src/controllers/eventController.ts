@@ -3,6 +3,7 @@ import Event, { EventDocument } from '../models/event.model'; // Import your use
 import User from '../models/user.model';
 import EventGroup from '../models/usergroup.model';
 import UserGroup, { UserGroupDocument } from '../models/usergroup.model';
+import { Expense } from '../models/expense.model';
 
 const isUserCreator = async (req: Request, event: EventDocument, userId: string) => {
   const usergroupId = event.usergroupId;
@@ -54,6 +55,8 @@ export const createEvent = async (req: Request, res: Response) => {
     // Create a user group
     const usergroup = new UserGroup({ users: [creator], creator, code });
     const usergroupId = (await usergroup.save())._id;
+    const expense = new Expense({ title: `${title} - Expense`, userGroup: usergroup._id });
+    const expenseId = (await expense.save())._id;
     const event = new Event({
       title,
       description,
@@ -62,6 +65,7 @@ export const createEvent = async (req: Request, res: Response) => {
       location,
       usergroupId,
       status: 'PENDING',
+      expenseId,
     });
     await event.save();
 
@@ -87,6 +91,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     if (!usergroup) {
       return res.status(400).json({ error: 'Usergroup does not exist' });
     }
+
     const isUserExistInGroup = usergroup.users.find((user) => user === userId);
 
     const { title, description, location } = req.body;
