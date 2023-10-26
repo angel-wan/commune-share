@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAuthToken } from "../../utility/authToken";
+import { ScheduleType } from "../event/eventSlice";
 const backendURL = "http://127.0.0.1:3000";
 // get jwt from local storage
 
@@ -13,7 +14,7 @@ export interface EventData {
   eventEndDate?: Date;
   // attendees: Array<AttendeeType>;
   // votes: Array<VotesType>;
-  // schedule: Array<ScheduleType>;
+  slots: Array<ScheduleType>;
 }
 export const createEvent = createAsyncThunk(
   "event/create",
@@ -90,7 +91,6 @@ export const removeEvent = createAsyncThunk(
   async (eventId: string, { rejectWithValue }) => {
     try {
       const token = getAuthToken();
-
       const response = await axios.delete(`${backendURL}/event/remove`, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -73,18 +73,38 @@ export const createEvent = async (req: Request, res: Response) => {
 export const updateEvent = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.body;
-
     const event = await Event.findOne({ _id: eventId });
     const userId = (req.user as { _id: string })._id;
+
     if (!event) {
       return res.status(400).json({ error: 'Event does not exist' });
     }
-    if (!isUserCreator(req, event, userId)) {
-      return res.status(401).json({ error: 'You Are Not Event Creator' });
+
+    const usergroup_id = event.usergroupId;
+    const usergroup = await UserGroup.findOne({ _id: usergroup_id });
+    if (!usergroup) {
+      return res.status(400).json({ error: 'Usergroup does not exist' });
     }
-    const { title, description, location } = req.body;
+    const isUserExistInGroup = usergroup.users.find((user) => user === userId);
+
+    const { title, description, location, slots } = req.body;
+
+    // check title, description, location is different from the existing one
+    const isTitleChanged = title && title !== event.title;
+    const isDescriptionChanged = description && description !== event.description;
+    const isLocationChanged = location && location !== event.location;
+
+    if (isTitleChanged || isDescriptionChanged || isLocationChanged) {
+      if (!isUserCreator(req, event, userId)) {
+        return res.status(401).json({ error: 'You Are Not Event Creator' });
+      }
+    }
+    if (!isUserExistInGroup) {
+      return res.status(401).json({ error: 'You Are Not Event Attendee' });
+    }
+
     if (title) {
-      event.title = title;
+      event.title;
     }
     if (description) {
       event.description = description;
@@ -92,6 +112,26 @@ export const updateEvent = async (req: Request, res: Response) => {
     if (location) {
       event.location = location;
     }
+
+    const schedule = event.schedule;
+
+    if (schedule.length > 0) {
+      // check if user is in the schedule
+      const isUserExistInSchedule = schedule.find((schedule) => schedule.user === userId);
+      if (!isUserExistInSchedule) {
+        schedule.push({ user: userId, slots });
+      } else {
+        // update the schedule
+        schedule.forEach((schedule) => {
+          if (schedule.user === userId) {
+            schedule.slots = slots;
+          }
+        });
+      }
+    } else {
+      schedule.push({ user: userId, slots });
+    }
+
     await event.save();
     res.json({ event });
   } catch (error) {

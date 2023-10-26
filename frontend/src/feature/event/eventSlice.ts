@@ -23,8 +23,8 @@ export interface EventState {
   title: string;
   description: string;
   location?: string | null;
-  eventStartDate?: Date;
-  eventEndDate?: Date;
+  eventStartDate: Date;
+  eventEndDate: Date;
   attendees?: Array<AttendeeType>;
   votes?: Array<VotesType>;
   schedule?: Array<ScheduleType>;

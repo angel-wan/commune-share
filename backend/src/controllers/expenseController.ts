@@ -31,6 +31,19 @@ export const createExpense = async (req: Request, res: Response) => {
     if (!savedUserGroupId) {
       return res.status(400).json({ error: 'Unable create user group' });
     }
+<<<<<<< Updated upstream
+=======
+
+    if (type === ExpenseType.EVENT && !eventId) {
+      return res.status(400).json({ error: 'EventId is required for event expenses' });
+    }
+
+    // TODO: Create user group for group expenses
+
+    const creatorExpenses: UserExpenseDocument[] =
+      expenses?.map((expense) => new UserExpense({ ...expense, user: creator })) || [];
+
+>>>>>>> Stashed changes
     const newExpense: ExpenseDocument = new Expense({
       title,
       userGroup: savedUserGroupId,

@@ -15,6 +15,7 @@ const EventDetail = () => {
   const { loading, error } = useAppSelector((state) => state.event);
   const { removedEvent } = useAppSelector((state) => state.event);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (eventId) {
       dispatch(getEventById(eventId));
@@ -35,7 +36,6 @@ const EventDetail = () => {
     dispatch(removeEvent(selectedEvent._id));
   }, [dispatch, selectedEvent]);
 
-  console.log({selectedEvent})
   if (loading) {
     return <div>Loading...</div>;
   }
