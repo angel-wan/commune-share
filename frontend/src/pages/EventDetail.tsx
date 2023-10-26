@@ -41,21 +41,25 @@ const EventDetail = () => {
   if (error) {
     return <div>You are not authorized to view this event: {error}</div>;
   }
+  if (!selectedEvent) {
+    return <div>Event not found</div>;
+  }
   return (
     <div>
       <h1> Event Details</h1>
       {selectedEvent && (
-        <Grid sx={{      
-        backgroundColor: '#1a1d24',
-        alignItems: "center",
-        border:"0.5px solid",
-        borderRadius: 4,
-        spacing:0,
-        p: 1,
-        cursor: "pointer",
-        marginBottom: "20px",
-        }}>
-
+        <Grid
+          sx={{
+            backgroundColor: "#1a1d24",
+            alignItems: "center",
+            border: "0.5px solid",
+            borderRadius: 4,
+            spacing: 0,
+            p: 1,
+            cursor: "pointer",
+            marginBottom: "20px",
+          }}
+        >
           <Grid sx={{ display: "none" }}>{selectedEvent._id}</Grid>
           <Grid sx={{ margin: "10px" }}>Title: {selectedEvent.title}</Grid>
           <Grid sx={{ margin: "10px" }}>
@@ -64,16 +68,22 @@ const EventDetail = () => {
           <Grid sx={{ margin: "10px" }}>
             Location: {selectedEvent.location}
           </Grid>
-          <Button variant="outlined" onClick={handleRemoveEvent} sx={{ margin: "10px" }} > Remove </Button>
-          <EventInfo />
-          <ChooseDate
-            eventStartDate={selectedEvent.eventStartDate}
-            eventEndDate={selectedEvent.eventEndDate}
-            event_id={selectedEvent._id}
-          />
-          <EventDetailSetting />
-        </Grid>      
+          <Button
+            variant="outlined"
+            onClick={handleRemoveEvent}
+            sx={{ margin: "10px" }}
+          >
+            {" "}
+            Remove{" "}
+          </Button>
+        </Grid>
       )}
+      <EventInfo />
+      <ChooseDate
+        eventStartDate={selectedEvent.eventStartDate}
+        eventEndDate={selectedEvent.eventEndDate}
+        event_id={selectedEvent._id}
+      />
     </div>
   );
 };

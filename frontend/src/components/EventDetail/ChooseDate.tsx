@@ -97,17 +97,17 @@ export default function ChooseDate(props: ChooseDateProps) {
               isAfter(date, new Date(eventEndDate))
             }
             className="rs-theme-dark"
-            onChange={handleDateChange}
+            onChange={(date) => handleDateChange(date!)}
           />
           <br />
           <div>
             <h2>All dates picked:</h2>
             <ul>
               {selectedDateAndTimeSlots.map((item, index) => (
-                <div style={{ display: "flex", marginTop: "10px" }}>
+                <div key={`${item.date} - ${index}`}style={{ display: "flex", marginTop: "10px" }}>
                   <li key={index}>
                     {`Date: ${item.date.toDateString()}, Session: ${
-                      item.timeSlot
+                      item.period
                     }`}
                   </li>
                   <Button
@@ -146,6 +146,6 @@ export default function ChooseDate(props: ChooseDateProps) {
           </Button>
         </DialogContent>
       </Dialog>
-        </div>
+    </div>
   );
 }
