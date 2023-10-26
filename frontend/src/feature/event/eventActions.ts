@@ -53,6 +53,7 @@ export const listEvents = createAsyncThunk(
       };
       const response = await axios.get(`${backendURL}/event/list`, config);
       return await response.data; // Assuming the API returns a string (e.g., a token)
+      
     } catch (error) {
       // return custom error message from the backend if present
       if (error instanceof Error) {

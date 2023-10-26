@@ -37,17 +37,15 @@ const ScheduleSchema = new Schema({
 
 // Define the event schema
 const eventSchema = new Schema({
-  code: { type: String, required: true, unique: true },
   title: { type: String, required: true, unique: false },
   description: { type: String, required: false, unique: false },
   location: { type: String, required: false },
-  creator: { type: Schema.Types.ObjectId, ref: 'User' }, // Reference to the user who created the event
   votes: [VoteOptionSchema], // Use the VoteOption schema for the votes property
   schedule: [ScheduleSchema], // Include the schedule field
   createdAt: { type: Date, required: true, default: Date.now },
   eventStartDate: { type: Date, required: false },
   eventEndDate: { type: Date, required: false },
-  status: { type: String, required: true, enum: ['pending', 'completed'], default: 'pending' },
+  status: { type: String, required: true, enum: ['PENDING', 'UPCOMING'], default: 'PENDING' },
   usergroupId: { type: Schema.Types.ObjectId, ref: 'UserGroup' },
 });
 
@@ -59,8 +57,6 @@ export interface EventDocument extends Document {
   location: string | null;
   eventStartDate: Date | null;
   eventEndDate: Date | null;
-  code: string;
-  creator: string;
   votes: Array<VotesType>;
   schedule: Array<ScheduleType>;
   createdAt: Date;

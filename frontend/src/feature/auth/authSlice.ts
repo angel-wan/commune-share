@@ -23,12 +23,8 @@ const initialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setCredentials: (state, { payload }) => {
-      state.userInfo = payload;
-    },
-  },
-  extraReducers: (builder) => {
+  reducers: {},
+  extraReducers :(builder) => {
     builder.addCase(registerUser.pending, (state: AuthState) => {
       state.loading = true;
       state.error = null;
@@ -68,10 +64,10 @@ export const authSlice = createSlice({
       state.error = null;
       state.success = false;
     });
-    builder.addCase(logoutUser.fulfilled, (state: AuthState, action) => {
+    builder.addCase(logoutUser.fulfilled, (state: AuthState) => {
       state.loading = false;
-      state.userInfo = action.payload.userInfo;
-      state.isAuthenticated = action.payload.isAuthenticated;
+      state.userInfo = undefined;
+      state.isAuthenticated = false;
       state.success = true;
     });
     builder.addCase(logoutUser.rejected, (state: AuthState, action) => {

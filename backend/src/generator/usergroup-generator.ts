@@ -29,8 +29,8 @@ const userGroupGenerator = async (ids: string[]) => {
     }
 
     const finalUserGroup = await UserGroup.bulkSave(fakeUserGroups);
-
     const result = Object.values(finalUserGroup.insertedIds);
+    console.log('result', result);
     return result;
   } catch (error) {
     console.error('Error generating fake user data:', error);

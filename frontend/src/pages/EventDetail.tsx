@@ -1,7 +1,5 @@
 import ChooseDate from "../components/EventDetail/ChooseDate";
 import EventInfo from "../components/EventDetail/EventInfo";
-import EventDetailSetting from "../components/EventDetail/EventDetailSetting";
-import Polling from "../components/EventDetail/Polling";
 import { useAppSelector, useAppDispatch } from "../app/hook";
 import { getEventById } from "../feature/event/eventActions";
 import { useParams } from "react-router-dom";

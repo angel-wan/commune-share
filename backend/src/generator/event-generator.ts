@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import Event from '../models/event.model';
 
-const EventGenerator = async (ids: string[]) => {
+const EventGenerator = async (ids: any[]) => {
   try {
     // Remove all existing events
     await Event.deleteMany();
@@ -17,18 +17,17 @@ const EventGenerator = async (ids: string[]) => {
         title: faker.company.name(),
         description: faker.lorem.paragraph(),
         location: faker.address.city(),
-        creator: ids[Math.floor(Math.random() * ids.length)],
         eventStartDate: startDate,
         eventEndDate: endDate,
-        code: faker.random.alphaNumeric(6),
-        status: Math.random() > 0.5 ? 'pending' : 'completed',
+        status: Math.random() > 0.5 ? 'PENDING' : 'UPCOMING',
+        usergroupId: ids[i],
       };
 
       fakeEvents.push(new Event(fakeEvent));
     }
-
     const events = await Event.bulkSave(fakeEvents);
     const eventids = Object.values(events.insertedIds);
+    console.log('eventids', eventids);
     return eventids;
   } catch (error) {
     console.error('Error generating fake event data:', error);

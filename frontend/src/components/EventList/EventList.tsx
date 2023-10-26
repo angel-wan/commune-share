@@ -6,9 +6,7 @@ import NewEvent from "./NewEvent";
 import { useAppSelector, useAppDispatch } from "../../app/hook";
 import { useEffect, useState } from "react";
 import { listEvents } from "../../feature/event/eventActions";
-import Login from "../Auth/Login";
 import { shallowEqual } from "react-redux";
-import { isAuthenticated } from "../../feature/auth/authSlice";
 
 const EventList = () => {
   const eventList = useAppSelector((state) => state.event.list, shallowEqual);
@@ -59,6 +57,13 @@ const EventList = () => {
               );
             }
             if (barStatus === "PENDING" && event.status === "PENDING") {
+              return (
+                <ListItem key={`${event._id}.${index}`}>
+                  <EventItem event={event} />
+                </ListItem>
+              );
+            }
+            if (barStatus === "PAST" && event.status === "PAST") {
               return (
                 <ListItem key={`${event._id}.${index}`}>
                   <EventItem event={event} />

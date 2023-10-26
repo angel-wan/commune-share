@@ -6,7 +6,7 @@ import EventList from "../components/EventList/EventList";
 const Home = () => {
   return (
     <>
-      <Login />
+    <Login />
       {/* <RegisterForm /> */}
       {/* <LoginForm /> */}
       <EventList />
