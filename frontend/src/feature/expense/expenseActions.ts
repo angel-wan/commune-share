@@ -43,6 +43,7 @@ export const listExpense = createAsyncThunk(
   "expense",
   async (_, { rejectWithValue }) => {
     try {
+      console.log("listExpense");
       const config = {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
@@ -50,8 +51,9 @@ export const listExpense = createAsyncThunk(
         },
       };
       const response = await axios.get(
-        `${backendURL}/expense/`, config
+        `${backendURL}/expense`, config
       );
+      console.log(response.data);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
@@ -61,3 +63,29 @@ export const listExpense = createAsyncThunk(
     }
   }
 );
+
+export const getExpenseById = createAsyncThunk(
+  "expense/getbyid",
+  async (expenseId: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        `${backendURL}/expense/${expenseId}`,
+        config
+      );
+      console.log(response.data);
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+

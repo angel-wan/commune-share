@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
-import { shallowEqual } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { useAppSelector, useAppDispatch } from "../../app/hook";
 import { listExpense } from "../../feature/expense/expenseActions";
-import { Box, Tab, Grid, Typography } from "@mui/material";
-import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Grid, List, ListItem, Paper, Typography } from "@mui/material";
 import JoinExpense from "./JoinExpense";
 import NewExpense from "./NewExpense";
+import { Button } from "rsuite";
 
 const SplitExpenseList = () => {
-  const expenseList = useAppSelector((state) => state.expense, shallowEqual);
   const dispatch = useAppDispatch();
-  //const { userInfo } = useAppSelector((state) => state.auth);
-  const [tabValue, setTabValue] = useState("1");
+  const expenseList = useAppSelector((state) => state.expense.list);
+  const { userInfo } = useAppSelector((state) => state.auth);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(listExpense());
-    console.log("EventList - useEffect - userInfo", expenseList);
-  }, []);
+    console.log("ExpenseList - useEffect - expense", expenseList);
+  }, [userInfo]);
 
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
-    setTabValue(newValue);
+  const onSelectExpense = (event_id: string) => {
+    navigate(`/expense/${event_id}`);
   };
 
   return (
@@ -37,6 +39,15 @@ const SplitExpenseList = () => {
           xs={8}
         >
           <Grid item>
+            <Button
+              onClick={() => {
+                dispatch(listExpense());
+              }}
+            >
+              Fetch
+            </Button>
+          </Grid>
+          <Grid item>
             <JoinExpense />
           </Grid>
           <Grid item>
@@ -44,16 +55,31 @@ const SplitExpenseList = () => {
           </Grid>
         </Grid>
       </Grid>
-      <TabContext value={tabValue}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChangeTab} variant="fullWidth">
-            <Tab label="Upcoming Events" value="1" />
-            <Tab label="Past Events" value="2" />
-          </TabList>
-        </Box>
-        <TabPanel value="1">Item One</TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
-      </TabContext>
+
+      <List>
+        <ListItem>Test</ListItem>
+        {expenseList.map((expense, index) => (
+          <ListItem key={index}>
+            <Grid
+              container
+              component={Paper}
+              direction="row"
+              alignItems="center"
+              border={"0.5px solid"}
+              borderRadius={4}
+              spacing={0}
+              sx={{
+                p: 1,
+                cursor: "pointer",
+              }}
+              onClick={() => onSelectExpense(expense._id)}
+            >
+              <Typography variant="h5">{expense.title}</Typography>
+            </Grid>
+          </ListItem>
+        ))}
+      </List>
+
       {/* <Grid item px={2}>
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

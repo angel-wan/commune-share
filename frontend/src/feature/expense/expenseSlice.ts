@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import {listExpense} from "./expenseActions"
 
 export enum ExpenseType {
   EVENT = "Event",
@@ -15,6 +15,7 @@ export interface ExpenseListState {
 }
 
 export interface ExpenseState {
+  _id: string;
   title: string;
   userExpense: UserExpenseState[];
 }
@@ -24,7 +25,7 @@ export interface UserExpenseState {
   amount: number;
 }
 
-const initialState = {
+const initialState:ExpenseListState = {
   list: [],
   loading: false,
   error: null,
@@ -45,7 +46,24 @@ export const expenseListSlice = createSlice({
       state.success = false;
     },
   },
-  extraReducers: () => {},
+  extraReducers: (builder) => {
+
+    builder.addCase(listExpense.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(listExpense.fulfilled, (state, action) => {
+      state.loading = false;
+      state.list = action.payload;
+      state.success = true;
+    });
+    builder.addCase(listExpense.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+
+  },
 });
 export const resetState = expenseListSlice.actions.resetState;
 export const clearEventList = expenseListSlice.actions.clearEventList;
