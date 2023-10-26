@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect } from "react";
 import { Button, Grid } from "@mui/material";
 import { resetState } from "../feature/event/eventSlice";
+import EventDetailSetting from "../components/EventDetail/EventDetailSetting";
+
 const EventDetail = () => {
   // get event id from url
   const dispatch = useAppDispatch();
@@ -44,15 +46,16 @@ const EventDetail = () => {
       <h1> Event Details</h1>
       {selectedEvent && (
         <Grid>
-          <Grid>{selectedEvent._id}</Grid>
-          <Grid>Title: {selectedEvent.title}</Grid>
-          <Grid>Description: {selectedEvent.description}</Grid>
-          <Grid>Location: {selectedEvent.location}</Grid>
-          <Button onClick={handleRemoveEvent}>Remove Event</Button>
+          <Grid >{selectedEvent._id}</Grid>
+          <Grid sx={{margin: "10px"}}>Title: {selectedEvent.title}</Grid>
+          <Grid sx={{margin: "10px"}}>Description: {selectedEvent.description}</Grid>
+          <Grid sx={{margin: "10px"}}>Location: {selectedEvent.location}</Grid>
+          <Button onClick={handleRemoveEvent}>Remove</Button>
         </Grid>
       )}
       <EventInfo />
-      <ChooseDate />
+      <ChooseDate eventStartDate={undefined} eventEndDate={undefined} />
+      <EventDetailSetting />
     </div>
   );
 };
