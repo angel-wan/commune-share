@@ -1,10 +1,5 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export enum ExpenseType {
-  EVENT = 'Event',
-  GROUP = 'Group',
-}
-
 const userExpenseSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
@@ -12,19 +7,15 @@ const userExpenseSchema = new Schema({
 });
 
 const expenseSchema = new Schema({
-  title: { type: String, required: true },
-  type: { type: String, enum: Object.values(ExpenseType), required: true },
-  event: { type: Schema.Types.ObjectId, ref: 'Event' },
-  creator: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // User who created the tracking
+  title: { type: String, required: false },
+  userGroup: { type: Schema.Types.ObjectId, ref: 'UserGroup' },
   expenses: [userExpenseSchema],
 });
 
 // Create a TypeScript interface to describe the Expense document
 export interface ExpenseDocument extends Document {
-  title: string;
-  type: ExpenseType;
-  event?: string;
-  creator: string;
+  title?: string;
+  userGroup: string;
   expenses: UserExpenseDocument[];
 }
 

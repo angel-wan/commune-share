@@ -5,7 +5,7 @@ import {
   createExpense,
   getExpenseById,
   getExpenseSummary,
-  listExpense,
+  listExpenses,
   removeExpense,
   removeExpenseItem,
 } from '../controllers/expenseController';
@@ -15,7 +15,7 @@ const expenseRouter = express.Router();
 expenseRouter.post('', requireAuth, createExpense);
 expenseRouter.post('/:expenseId', requireAuth, addExpenseItem);
 expenseRouter.delete('/:expenseId/:expenseItemId', requireAuth, removeExpenseItem);
-expenseRouter.get('', requireAuth, listExpense);
+expenseRouter.get('', requireAuth, listExpenses);
 expenseRouter.get('/:expenseId', requireAuth, getExpenseById);
 expenseRouter.get('/:expenseId/summary', requireAuth, getExpenseSummary);
 
