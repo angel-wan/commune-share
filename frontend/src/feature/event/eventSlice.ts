@@ -11,9 +11,11 @@ import {
 export interface EventListState {
   list: EventState[];
   selectedEvent?: EventState;
+  isSelectedEventCreator?: boolean;
   loading: boolean;
   error: string | null;
   success: boolean;
+  removedEvent?: boolean;
 }
 
 export interface EventState {
@@ -23,13 +25,12 @@ export interface EventState {
   location?: string | null;
   eventStartDate?: Date;
   eventEndDate?: Date;
-  code: string;
-  creator: string;
   attendees?: Array<AttendeeType>;
   votes?: Array<VotesType>;
   schedule?: Array<ScheduleType>;
   createdAt: Date;
   status: "PENDING" | "UPCOMING" | "PAST";
+  removedEvent?: boolean;
 }
 
 export interface ScheduleType {
@@ -77,6 +78,13 @@ export const eventListSlice = createSlice({
   reducers: {
     clearEventList: (state) => {
       state.list = [];
+    },
+    resetState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+      state.isSelectedEventCreator = false;
+      state.removedEvent = false;
     },
   },
   extraReducers: (builder) => {
@@ -137,9 +145,10 @@ export const eventListSlice = createSlice({
     builder.addCase(removeEvent.fulfilled, (state, action) => {
       state.loading = false;
       state.list = state.list.filter(
-        (event) => event.title !== action.payload.event.title
+        (event) => event._id !== action.payload.event
       );
       state.success = true;
+      state.removedEvent = true;
     });
     builder.addCase(removeEvent.rejected, (state, action) => {
       state.loading = false;
@@ -170,6 +179,7 @@ export const eventListSlice = createSlice({
     builder.addCase(getEventById.fulfilled, (state, action) => {
       state.loading = false;
       state.selectedEvent = action.payload.event;
+      state.isSelectedEventCreator = action.payload.isSelectedEventCreator;
       state.success = true;
     });
     builder.addCase(getEventById.rejected, (state, action) => {
@@ -178,5 +188,7 @@ export const eventListSlice = createSlice({
     });
   },
 });
+export const removedEvent = (state: EventListState) => state.removedEvent;
+export const resetState = eventListSlice.actions.resetState;
 export const clearEventList = eventListSlice.actions.clearEventList;
 export default eventListSlice.reducer;

@@ -4,14 +4,16 @@ import User from '../models/user.model';
 import EventGroup from '../models/usergroup.model';
 import UserGroup, { UserGroupDocument } from '../models/usergroup.model';
 
-const isUserCreator = (req: Request, event: EventDocument) => {
-  const userId = (req.user as { _id: string })._id;
+const isUserCreator = async (req: Request, event: EventDocument, userId: string) => {
   const usergroupId = event.usergroupId;
-  const usergroup = UserGroup.findById(usergroupId);
+  const usergroup = await UserGroup.findOne({ _id: usergroupId });
   if (!usergroup) {
-    throw new Error('User group does not exist');
+    return false;
   }
-  return usergroup;
+  if (usergroup && usergroup.creator.toString() === userId.toString()) {
+    return true;
+  }
+  return false;
 };
 
 const isUserExist = async (userId: string) => {
@@ -72,11 +74,13 @@ export const createEvent = async (req: Request, res: Response) => {
 export const updateEvent = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.body;
+
     const event = await Event.findOne({ _id: eventId });
+    const userId = (req.user as { _id: string })._id;
     if (!event) {
       return res.status(400).json({ error: 'Event does not exist' });
     }
-    if (!isUserCreator(req, event)) {
+    if (!isUserCreator(req, event, userId)) {
       return res.status(401).json({ error: 'You Are Not Event Creator' });
     }
     const { title, description, location } = req.body;
@@ -99,14 +103,25 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const removeEvent = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.body;
+    console.log('remove', eventId);
+
     const event = await Event.findOne({ _id: eventId });
+    const userId = (req.user as { _id: string })._id;
+
     if (!event) {
       return res.status(400).json({ error: 'Event does not exist' });
     }
-    if (!isUserCreator(req, event)) {
+    const admin = await isAdmin(userId);
+    if (admin) {
+      await event.deleteOne();
+      return res.status(200).json({ error: 'Event removed' });
+    }
+    const iscreator = await isUserCreator(req, event, userId);
+    if (!iscreator) {
       return res.status(401).json({ error: 'You Are Not Event Creator' });
     }
     await event.deleteOne();
+    res.status(200).json({ event: event._id });
   } catch (error) {
     res.status(500).json({ error: 'Remove update failed' });
   }
@@ -117,17 +132,16 @@ export const listEvent = async (req: Request, res: Response) => {
     const userId = (req.user as { _id: string })._id;
     // check if user is admin
     const user = await User.findOne({ _id: userId });
-    // if (user && user.username === 'admin') {
-    //   const events = await Event.find({});
-    //   return res.json({ events });
-    // }
+    if (user && user.username === 'admin') {
+      const events = await Event.find({});
+      return res.json({ events });
+    }
     // find user inside users in Event
     const usergroup = await UserGroup.find({ users: { $in: [userId] } });
     const usergroupIds = usergroup.map((usergroup) => usergroup._id);
     console.log('usergroupIds', usergroupIds);
     const events = await Event.find({ usergroupId: { $in: usergroupIds } });
 
-    console.log(events);
     // merge two arrays
     res.json({ events });
   } catch (error) {
@@ -142,17 +156,21 @@ export const getEventById = async (req: Request, res: Response) => {
     // if user is admin or attendee of the event
     const event = await Event.findById(eventId);
 
+    const admin = await isAdmin(_id);
+    if (admin) {
+      return res.json({ event, isSelectedEventCreator: true });
+    }
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
-    if (await isAdmin(_id)) {
-      return res.json({ event });
-    }
     // read user group and check if user is in the group
-    const usergroup = await EventGroup.findOne({ _id: event.usergroupId });
+    const usergroup = await UserGroup.findOne({ _id: event.usergroupId });
 
     if (!usergroup) {
       return res.status(404).json({ error: 'Group not found' });
+    }
+    if (usergroup.creator.toString() === _id.toString()) {
+      return res.json({ event, isSelectedEventCreator: true });
     }
     if (usergroup.creator.toString() !== _id.toString()) {
       const attendee = usergroup.users.find((attendee) => {
@@ -162,7 +180,7 @@ export const getEventById = async (req: Request, res: Response) => {
         return res.status(401).json({ error: 'You Are Not Event Attendee' });
       }
     }
-    res.json({ event });
+    res.json({ event, isSelectedEventCreator: false });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });
   }

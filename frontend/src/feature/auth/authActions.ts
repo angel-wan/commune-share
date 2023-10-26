@@ -29,7 +29,7 @@ export const registerUser = createAsyncThunk(
         { username, email, password },
         config
       );
-      return (await response.data) as string; // Assuming the API returns a string (e.g., a token)
+      return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
       if (error instanceof Error) {

@@ -1,24 +1,37 @@
 import ChooseDate from "../components/EventDetail/ChooseDate";
 import EventInfo from "../components/EventDetail/EventInfo";
 import { useAppSelector, useAppDispatch } from "../app/hook";
-import { getEventById } from "../feature/event/eventActions";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { Grid } from "@mui/material";
-
+import { getEventById, removeEvent } from "../feature/event/eventActions";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+import { Button, Grid } from "@mui/material";
+import { resetState } from "../feature/event/eventSlice";
 const EventDetail = () => {
   // get event id from url
   const dispatch = useAppDispatch();
   const { eventId } = useParams<{ eventId: string }>();
-
+  const { loading, error, success } = useAppSelector((state) => state.event);
+  const { removedEvent } = useAppSelector((state) => state.event);
+  const navigate = useNavigate();
   useEffect(() => {
     if (eventId) {
       dispatch(getEventById(eventId));
     }
   }, []);
 
-  const { loading, error } = useAppSelector((state) => state.event);
+  useEffect(() => {
+    console.log("removedEvent", removedEvent);
+    if (!removedEvent) return;
+    dispatch({ type: resetState.type });
+    navigate("/");
+  }, [removedEvent]);
+
   const selectedEvent = useAppSelector((state) => state.event.selectedEvent);
+
+  const handleRemoveEvent = useCallback(() => {
+    if (!selectedEvent) return;
+    dispatch(removeEvent(selectedEvent._id));
+  }, [dispatch, selectedEvent]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -35,6 +48,7 @@ const EventDetail = () => {
           <Grid>Title: {selectedEvent.title}</Grid>
           <Grid>Description: {selectedEvent.description}</Grid>
           <Grid>Location: {selectedEvent.location}</Grid>
+          <Button onClick={handleRemoveEvent}>Remove Event</Button>
         </Grid>
       )}
       <EventInfo />

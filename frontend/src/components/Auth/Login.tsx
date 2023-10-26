@@ -11,10 +11,14 @@ import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { LoginData, loginUser } from "../../feature/auth/authActions";
 import SignUp from "./SignUp";
 import { listEvents } from "../../feature/event/eventActions";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { loading, userInfo } = useAppSelector((state) => state.auth);
+  const { loading, userInfo, success, isAuthenticated } = useAppSelector(
+    (state) => state.auth
+  );
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(userInfo === undefined);
   const [errorMsg, setErrorMsg] = useState("");
@@ -44,7 +48,24 @@ const Login = () => {
       setErrorMsg("Email or password is missing.");
       return;
     }
-    dispatch(loginUser(loginData));
+    dispatch(loginUser(loginData))
+      .unwrap()
+      .then((originalPromiseResult) => {
+        console.log("originalPromiseResult", originalPromiseResult);
+        if (originalPromiseResult.user) {
+          // dispatch(listEvents());
+          console.log("success", "nav", loading, success, isAuthenticated);
+          // navigate("/");
+          window.location.reload();
+        }
+      })
+      .catch((rejectedValueOrSerializedError) => {
+        console.log(
+          "rejectedValueOrSerializedError",
+          rejectedValueOrSerializedError
+        );
+        // handle error here
+      });
   };
 
   return (
