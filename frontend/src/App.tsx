@@ -14,6 +14,7 @@ import UserProfile from "./pages/UserProfile";
 import SplitExpense from "./pages/SplitExpense";
 import EventDetail from "./pages/EventDetail";
 import Polling from "./components/EventDetail/Polling";
+import SplitExpenseDetail from "./pages/SplitExpenseDetail";
 
 function App() {
   const darkTheme = createTheme({
@@ -30,6 +31,7 @@ function App() {
             <Route path="user-profile" element={<UserProfile />} />
             <Route path="split-expense" element={<SplitExpense />} />
             <Route path="events/:eventId" element={<EventDetail />} />
+            <Route path="expense/:expenseId" element={<SplitExpenseDetail />} />
             <Route path="polling" element={<Polling />} />
             <Route path="*" element={<NotFound />} />
           </Route>
