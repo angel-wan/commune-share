@@ -18,7 +18,7 @@ import { createEvent, EventData } from "../../feature/event/eventActions";
 const NewEvent = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.userInfo);
-  const { loading } = useAppSelector((state) => state.event);
+  const { loading, success } = useAppSelector((state) => state.event);
 
   const [open, setOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -67,11 +67,13 @@ const NewEvent = () => {
       !eventData.eventStartDate ||
       !eventData.eventEndDate
     ) {
-      setErrorMsg("Username, email or password is missing.");
+      setErrorMsg("Title or day range is missing.");
       return;
     }
-    console.log("SignUp - registerUser", eventData);
+
+    console.log("Create Event ", eventData);
     dispatch(createEvent(eventData));
+    handleClose();
   };
 
   return (
@@ -84,6 +86,7 @@ const NewEvent = () => {
         <DialogContent>
           <TextField
             autoFocus
+            required
             margin="dense"
             id="title"
             label="Title"

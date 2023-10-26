@@ -1,11 +1,6 @@
-import { Container } from "@mui/material";
-
+import SplitExpenseList from "../components/SplitExpense/SplitExpenseList";
 const SplitExpense = () => {
-  return (
-    <Container>
-      
-    </Container>
-  );
+  return <SplitExpenseList />;
 };
 
 export default SplitExpense;
