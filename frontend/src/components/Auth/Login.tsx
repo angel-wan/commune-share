@@ -50,9 +50,6 @@ const Login = () => {
       .then((originalPromiseResult) => {
         console.log("originalPromiseResult", originalPromiseResult);
         if (originalPromiseResult.user) {
-          // dispatch(listEvents());
-          console.log("success", "nav", loading, success, isAuthenticated);
-          // navigate("/");
           window.location.reload();
         }
       })

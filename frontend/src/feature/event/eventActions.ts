@@ -18,7 +18,7 @@ export interface EventData {
 export const createEvent = createAsyncThunk(
   "event/create",
   async (data: EventData, { rejectWithValue }) => {
-    const { title, description, location } = data;
+    const { title, description, location, eventStartDate, eventEndDate } = data;
     try {
       const config = {
         headers: {
@@ -28,7 +28,7 @@ export const createEvent = createAsyncThunk(
       };
       const response = await axios.post(
         `${backendURL}/event/create`,
-        { title, description, location },
+        { title, description, location, eventStartDate, eventEndDate },
         config
       );
       return await response.data; // Assuming the API returns a string (e.g., a token)
@@ -90,7 +90,7 @@ export const removeEvent = createAsyncThunk(
   async (eventId: string, { rejectWithValue }) => {
     try {
       const token = getAuthToken();
-  
+
       const response = await axios.delete(`${backendURL}/event/remove`, {
         headers: {
           Authorization: `Bearer ${token}`,

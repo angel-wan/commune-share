@@ -35,6 +35,7 @@ const EventDetail = () => {
     dispatch(removeEvent(selectedEvent._id));
   }, [dispatch, selectedEvent]);
 
+  console.log({selectedEvent})
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -54,7 +55,7 @@ const EventDetail = () => {
         </Grid>
       )}
       <EventInfo />
-      <ChooseDate eventStartDate={undefined} eventEndDate={undefined} />
+      <ChooseDate eventStartDate={selectedEvent?.eventStartDate} eventEndDate={selectedEvent?.eventEndDate} />
       <EventDetailSetting />
     </div>
   );
