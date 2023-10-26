@@ -12,7 +12,10 @@ const EventDetail = () => {
   const dispatch = useAppDispatch();
   const { eventId } = useParams<{ eventId: string }>();
   const { loading, error } = useAppSelector((state) => state.event);
-  const { removedEvent } = useAppSelector((state) => state.event);
+  const { removedEvent, selectedTimeSlots } = useAppSelector(
+    (state) => state.event
+  );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,11 +25,16 @@ const EventDetail = () => {
   }, []);
 
   useEffect(() => {
-    console.log("removedEvent", removedEvent);
     if (!removedEvent) return;
     dispatch({ type: resetState.type });
     navigate("/");
   }, [removedEvent]);
+
+  useEffect(() => {
+    if (loading === false && error === null) {
+      // dispatch(getEventById(eventId));
+    }
+  }, [loading]);
 
   const selectedEvent = useAppSelector((state) => state.event.selectedEvent);
 
@@ -44,6 +52,11 @@ const EventDetail = () => {
   if (!selectedEvent) {
     return <div>Event not found</div>;
   }
+
+  const calculateBestTime = () => {
+    //TODO: calculate best time
+    console.log();
+  };
   return (
     <div>
       <h1> Event Details</h1>
@@ -83,6 +96,8 @@ const EventDetail = () => {
         eventStartDate={selectedEvent.eventStartDate}
         eventEndDate={selectedEvent.eventEndDate}
         event_id={selectedEvent._id}
+        schedule={selectedEvent.schedule}
+        selectedTimeSlots={selectedTimeSlots ? selectedTimeSlots : []}
       />
     </div>
   );

@@ -4,12 +4,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hook";
-import { joinEventByCode } from "../../feature/event/eventActions";
+import { joinUserGroupByCode } from "../../feature/usergroup/usergroupActions";
 const JoinEvent = () => {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
@@ -26,7 +25,7 @@ const JoinEvent = () => {
 
   const handleClickJoin = () => {
     console.log(code);
-    dispatch(joinEventByCode(code));
+    dispatch(joinUserGroupByCode(code));
     handleClickClose();
   };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Grid, Button } from "@mui/material";
 import { DatePicker } from "rsuite";
 import Dialog from "@mui/material/Dialog";
@@ -9,6 +9,7 @@ import isBefore from "date-fns/isBefore";
 import isAfter from "date-fns/isAfter";
 import { TimeSlotType, Period } from "../../feature/event/eventSlice";
 // Enable dark mode
+import { getEventById } from "../../feature/event/eventActions";
 
 import "rsuite/dist/rsuite-no-reset.min.css";
 import "./date.css";
@@ -28,20 +29,26 @@ interface ChooseDateProps {
   eventStartDate: Date;
   eventEndDate: Date;
   event_id: string;
+  schedule: Array<TimeSlotType>;
+  selectedTimeSlots: Array<TimeSlotType>;
 }
 
 export default function ChooseDate(props: ChooseDateProps) {
-  const { eventStartDate, eventEndDate, event_id } = props;
+  const {
+    eventStartDate,
+    eventEndDate,
+    event_id,
+    schedule,
+    selectedTimeSlots,
+  } = props;
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [selectedDateAndTimeSlots, setSelectedDateAndTimeSlots] = useState<
-    Array<TimeSlotType>
-  >([]);
+  const [selectedDateAndTimeSlots, setSelectedDateAndTimeSlots] =
+    useState<Array<TimeSlotType>>(selectedTimeSlots);
 
   const dispatch = useAppDispatch();
 
   const handleDateChange = (date: Date) => {
-    console.log(date);
     setSelectedDate(date);
     setDialogOpen(true);
   };
@@ -63,10 +70,16 @@ export default function ChooseDate(props: ChooseDateProps) {
         eventId: event_id,
         slots: selectedDateAndTimeSlots,
       })
-    );
+    ).then(() => {
+      dispatch(getEventById(event_id));
+    });
   };
 
-  const removeSelectedDate = (e) => {
+  const removeSelectedDate = (e: {
+    date: Date;
+    period: Period;
+    _id: string;
+  }) => {
     setSelectedDateAndTimeSlots(
       selectedDateAndTimeSlots.filter((item) => item !== e)
     );
@@ -104,11 +117,12 @@ export default function ChooseDate(props: ChooseDateProps) {
             <h2>All dates picked:</h2>
             <ul>
               {selectedDateAndTimeSlots.map((item, index) => (
-                <div key={`${item.date} - ${index}`}style={{ display: "flex", marginTop: "10px" }}>
+                <div
+                  key={`${item.date} - ${index}`}
+                  style={{ display: "flex", marginTop: "10px" }}
+                >
                   <li key={index}>
-                    {`Date: ${item.date.toDateString()}, Session: ${
-                      item.period
-                    }`}
+                    {`Date: ${item.date}, Session: ${item.period}`}
                   </li>
                   <Button
                     variant="outlined"
@@ -120,6 +134,20 @@ export default function ChooseDate(props: ChooseDateProps) {
                 </div>
               ))}
             </ul>
+            <h2>Your dates picked:</h2>
+
+            <ul>
+              {selectedTimeSlots.map((item, index) => (
+                <li key={index}>
+                  {`Date: ${item.date}, Session: ${item.period}`}
+                </li>
+              ))}
+            </ul>
+            <h2>Common Date</h2>
+            {/* {schedule.map((item, index) => (
+
+            )} */}
+            {/* TODO: ANGEL */}
             <Button variant="outlined" onClick={handleSave}>
               Save
             </Button>

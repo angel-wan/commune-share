@@ -4,7 +4,6 @@ import {
   listEvents,
   removeEvent,
   updateEvent,
-  joinEventByCode,
   getEventById,
 } from "./eventActions";
 
@@ -12,6 +11,7 @@ export interface EventListState {
   list: EventState[];
   selectedEvent?: EventState;
   isSelectedEventCreator?: boolean;
+  selectedTimeSlots?: Array<TimeSlotType>;
   loading: boolean;
   error: string | null;
   success: boolean;
@@ -154,23 +154,6 @@ export const eventListSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
     });
-
-    builder.addCase(joinEventByCode.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-      state.success = false;
-    });
-    builder.addCase(joinEventByCode.fulfilled, (state, action) => {
-      // refresh the list
-      state.loading = false;
-      state.list.push(action.payload.event);
-      state.success = true;
-    });
-    builder.addCase(joinEventByCode.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-
     builder.addCase(getEventById.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -180,6 +163,7 @@ export const eventListSlice = createSlice({
       state.loading = false;
       state.selectedEvent = action.payload.event;
       state.isSelectedEventCreator = action.payload.isSelectedEventCreator;
+      state.selectedTimeSlots = action.payload.selectedTimeSlots;
       state.success = true;
     });
     builder.addCase(getEventById.rejected, (state, action) => {

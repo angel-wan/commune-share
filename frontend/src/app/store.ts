@@ -21,6 +21,7 @@ export const store = configureStore({
     auth: authReducer,
     event: eventListSlice.reducer,
     expense: expenseListSlice.reducer,
+    usergroup: eventListSlice.reducer,
   },
   middleware: customizedMiddleware,
 });

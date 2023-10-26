@@ -1,20 +1,21 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAuthToken } from "../../utility/authToken";
-import { ScheduleType } from "../event/eventSlice";
+import { ScheduleType, TimeSlotType } from "../event/eventSlice";
 const backendURL = "http://127.0.0.1:3000";
 // get jwt from local storage
 
-export interface EventData {
-  title: string;
-  description: string;
-  location: string | null;
-  creator: string;
+interface EventData {
+  title?: string;
+  description?: string;
+  location?: string | null;
+  creator?: string;
   eventStartDate?: Date;
   eventEndDate?: Date;
   // attendees: Array<AttendeeType>;
   // votes: Array<VotesType>;
-  slots: Array<ScheduleType>;
+  slots?: Array<TimeSlotType>;
+  eventId?: string;
 }
 export const createEvent = createAsyncThunk(
   "event/create",
@@ -124,33 +125,7 @@ export const updateEvent = createAsyncThunk(
         { data },
         config
       );
-      return await response.data; // Assuming the API returns a string (e.g., a token)
-    } catch (error) {
-      // return custom error message from the backend if present
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
-      }
-    }
-  }
-);
 
-export const joinEventByCode = createAsyncThunk(
-  "event/joinbycode",
-  async (code: string, { rejectWithValue }) => {
-    try {
-      const token = getAuthToken();
-      // Place the JWT into the request header - remember the space after 'Bearer'
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const response = await axios.post(
-        `${backendURL}/event/code`,
-        { code },
-        config
-      );
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present

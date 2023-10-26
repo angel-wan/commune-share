@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEvent, updateEvent, getEventById, removeEvent, listEvent, joinEventByCode } from '../controllers/eventController';
+import { createEvent, updateEvent, getEventById, removeEvent, listEvent } from '../controllers/eventController';
 import requireAuth from '../middlewares/AuthMiddleware';
 const eventRouter = express.Router();
 // Define user routes
@@ -11,7 +11,6 @@ eventRouter.put('/update', requireAuth, updateEvent);
 eventRouter.delete('/remove', requireAuth, removeEvent);
 
 eventRouter.post('/create', requireAuth, createEvent);
-eventRouter.post('/code', requireAuth, joinEventByCode);
 
 
 

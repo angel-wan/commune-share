@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hook";
-import { joinEventByCode } from "../../feature/event/eventActions";
+import { joinUserGroupByCode } from "../../feature/usergroup/usergroupActions";
 
 const JoinExpense = () => {
   const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ const JoinExpense = () => {
 
   const handleClickJoin = () => {
     console.log(code);
-    dispatch(joinEventByCode(code));
+    dispatch(joinUserGroupByCode(code));
     handleClickClose();
   };
 

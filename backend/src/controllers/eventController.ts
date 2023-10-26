@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Event, { EventDocument } from '../models/event.model'; // Import your user model
 import User from '../models/user.model';
-import EventGroup from '../models/usergroup.model';
 import UserGroup, { UserGroupDocument } from '../models/usergroup.model';
 import { Expense } from '../models/expense.model';
 
@@ -78,7 +77,6 @@ export const createEvent = async (req: Request, res: Response) => {
 export const updateEvent = async (req: Request, res: Response) => {
   try {
     const { eventId, slots } = req.body.data;
-    console.log('eventId', eventId, slots);
     const event = await Event.findOne({ _id: eventId });
     const userId = (req.user as { _id: string })._id;
 
@@ -92,8 +90,7 @@ export const updateEvent = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Usergroup does not exist' });
     }
 
-    const isUserExistInGroup = usergroup.users.find((user) => user === userId);
-
+    const isUserExistInGroup = usergroup.users.find((user) => user.toString() === userId.toString());
     const { title, description, location } = req.body;
 
     // check title, description, location is different from the existing one
@@ -106,6 +103,7 @@ export const updateEvent = async (req: Request, res: Response) => {
         return res.status(401).json({ error: 'You Are Not Event Creator' });
       }
     }
+
     if (!isUserExistInGroup) {
       return res.status(401).json({ error: 'You Are Not Event Attendee' });
     }
@@ -124,13 +122,13 @@ export const updateEvent = async (req: Request, res: Response) => {
 
     if (schedule.length > 0) {
       // check if user is in the schedule
-      const isUserExistInSchedule = schedule.find((schedule) => schedule.user === userId);
+      const isUserExistInSchedule = schedule.find((item) => item.user.toString() === userId.toString());
       if (!isUserExistInSchedule) {
         schedule.push({ user: userId, slots });
       } else {
         // update the schedule
         schedule.forEach((schedule) => {
-          if (schedule.user === userId) {
+          if (schedule.user.toString() === userId.toString()) {
             schedule.slots = slots;
           }
         });
@@ -138,7 +136,6 @@ export const updateEvent = async (req: Request, res: Response) => {
     } else {
       schedule.push({ user: userId, slots });
     }
-
     await event.save();
     res.json({ event });
   } catch (error) {
@@ -201,22 +198,21 @@ export const getEventById = async (req: Request, res: Response) => {
     const { _id } = req.user as { _id: string };
     // if user is admin or attendee of the event
     const event = await Event.findById(eventId);
-
     const admin = await isAdmin(_id);
-    if (admin) {
-      return res.json({ event, isSelectedEventCreator: true });
-    }
+
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
     // read user group and check if user is in the group
     const usergroup = await UserGroup.findOne({ _id: event.usergroupId });
 
+    const selectedTimeSlots = event.schedule.find((schedule) => schedule.user.toString() === _id.toString());
+
     if (!usergroup) {
       return res.status(404).json({ error: 'Group not found' });
     }
     if (usergroup.creator.toString() === _id.toString()) {
-      return res.json({ event, isSelectedEventCreator: true });
+      return res.json({ event, isSelectedEventCreator: true, selectedTimeSlots: selectedTimeSlots?.slots });
     }
     if (usergroup.creator.toString() !== _id.toString()) {
       const attendee = usergroup.users.find((attendee) => {
@@ -226,45 +222,10 @@ export const getEventById = async (req: Request, res: Response) => {
         return res.status(401).json({ error: 'You Are Not Event Attendee' });
       }
     }
-    res.json({ event, isSelectedEventCreator: false });
+
+    res.json({ event, isSelectedEventCreator: false, selectedTimeSlots: selectedTimeSlots?.slots });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });
   }
 };
 
-export const joinEventByCode = async (req: Request, res: Response) => {
-  try {
-    const userId = (req.user as { _id: string })._id;
-    const user = await User.findOne({ _id: userId });
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    const { code } = req.body;
-    const event = await Event.findOne({ code });
-
-    if (!event) {
-      return res.status(404).json({ error: 'Event not found' });
-    }
-
-    const usergroup = await EventGroup.findOne({ _id: event.usergroupId });
-
-    if (!usergroup) {
-      return res.status(404).json({ error: 'Group not found' });
-    }
-
-    if (usergroup.creator.toString() === userId.toString()) {
-      return res.status(401).json({ error: 'You Are Event Creator' });
-    }
-
-    if (usergroup.users.find((attendee) => attendee.toString() === userId.toString())) {
-      return res.status(401).json({ error: 'You Are Already Attendee' });
-    }
-
-    usergroup.users.push(userId);
-    await usergroup.save();
-    res.status(200).json({ event });
-  } catch (error) {
-    res.status(500).json({ error: 'Error joining events' });
-  }
-};
