@@ -38,8 +38,7 @@ export const createEvent = async (req: Request, res: Response) => {
     }
     if (!title) {
       // throw new Error('Title are required');
-      return res.status(500).json({ error: "Title are required" });
-
+      return res.status(500).json({ error: 'Title are required' });
     }
     // 5 character with alpherbic and number code generator
     let isCodeUnique = false;
@@ -74,7 +73,8 @@ export const createEvent = async (req: Request, res: Response) => {
 
 export const updateEvent = async (req: Request, res: Response) => {
   try {
-    const { eventId } = req.body;
+    const { eventId, slots } = req.body.data;
+    console.log('eventId', eventId, slots);
     const event = await Event.findOne({ _id: eventId });
     const userId = (req.user as { _id: string })._id;
 
@@ -89,7 +89,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     }
     const isUserExistInGroup = usergroup.users.find((user) => user === userId);
 
-    const { title, description, location, slots } = req.body;
+    const { title, description, location } = req.body;
 
     // check title, description, location is different from the existing one
     const isTitleChanged = title && title !== event.title;

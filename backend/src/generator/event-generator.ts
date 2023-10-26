@@ -11,7 +11,7 @@ const EventGenerator = async (ids: any[]) => {
     const fakeEvents = [];
 
     for (let i = 0; i < numFakeEvents; i++) {
-      const startDate = faker.date.future().getDate();
+      const startDate = new Date().getTime();
       const endDate = startDate + Math.random() * 5;
       const fakeEvent = {
         title: faker.company.name(),

@@ -7,6 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import isBefore from "date-fns/isBefore";
 import isAfter from "date-fns/isAfter";
+import { TimeSlotType, Period } from "../../feature/event/eventSlice";
 // Enable dark mode
 
 import "rsuite/dist/rsuite-no-reset.min.css";
@@ -29,16 +30,12 @@ interface ChooseDateProps {
   event_id: string;
 }
 
-interface DateAndTimeSlots {
-  date: Date;
-  period: string;
-}
 export default function ChooseDate(props: ChooseDateProps) {
   const { eventStartDate, eventEndDate, event_id } = props;
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedDateAndTimeSlots, setSelectedDateAndTimeSlots] = useState<
-    Array<DateAndTimeSlots>
+    Array<TimeSlotType>
   >([]);
 
   const dispatch = useAppDispatch();
@@ -49,9 +46,8 @@ export default function ChooseDate(props: ChooseDateProps) {
     setDialogOpen(true);
   };
 
-  const handleTimeSlotSelection = (timeSlot: string) => {
+  const handleTimeSlotSelection = (timeSlot: Period) => {
     if (!selectedDate) return;
-    console.log({ timeSlot });
     setDialogOpen(false);
     setSelectedDateAndTimeSlots([
       ...selectedDateAndTimeSlots,
@@ -64,8 +60,8 @@ export default function ChooseDate(props: ChooseDateProps) {
     console.log("Data to be saved:", selectedDateAndTimeSlots);
     dispatch(
       updateEvent({
-        event_id: event_id,
-        slots: eventStartDate,
+        eventId: event_id,
+        slots: selectedDateAndTimeSlots,
       })
     );
   };
@@ -122,16 +118,16 @@ export default function ChooseDate(props: ChooseDateProps) {
           <DialogContentText>
             Please choose a time slot for the selected date.
           </DialogContentText>
-          <Button onClick={() => handleTimeSlotSelection("Morning")}>
+          <Button onClick={() => handleTimeSlotSelection(Period.MORNING)}>
             Morning
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("Afternoon")}>
+          <Button onClick={() => handleTimeSlotSelection(Period.AFTERNOON)}>
             Afternoon
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("Night")}>
+          <Button onClick={() => handleTimeSlotSelection(Period.NIGHT)}>
             Night
           </Button>
-          <Button onClick={() => handleTimeSlotSelection("Full Day")}>
+          <Button onClick={() => handleTimeSlotSelection(Period.ALL_DAY)}>
             FULL DAY
           </Button>
         </DialogContent>
