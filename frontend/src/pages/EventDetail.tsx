@@ -4,7 +4,8 @@ import { useAppSelector, useAppDispatch } from "../app/hook";
 import { getEventById } from "../feature/event/eventActions";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { Grid } from "@mui/material";
+import { Grid,  } from "@mui/material";
+import EventDetailSetting from "../components/EventDetail/EventDetailSetting";
 
 const EventDetail = () => {
   // get event id from url
@@ -31,14 +32,15 @@ const EventDetail = () => {
       <h1> Event Details</h1>
       {selectedEvent && (
         <Grid>
-          <Grid>{selectedEvent._id}</Grid>
-          <Grid>Title: {selectedEvent.title}</Grid>
-          <Grid>Description: {selectedEvent.description}</Grid>
-          <Grid>Location: {selectedEvent.location}</Grid>
+          <Grid >{selectedEvent._id}</Grid>
+          <Grid sx={{margin: "10px"}}>Title: {selectedEvent.title}</Grid>
+          <Grid sx={{margin: "10px"}}>Description: {selectedEvent.description}</Grid>
+          <Grid sx={{margin: "10px"}}>Location: {selectedEvent.location}</Grid>
         </Grid>
       )}
       <EventInfo />
-      <ChooseDate />
+      <ChooseDate eventStartDate={undefined} eventEndDate={undefined} />
+      <EventDetailSetting />
     </div>
   );
 };
