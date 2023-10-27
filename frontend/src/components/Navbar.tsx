@@ -10,10 +10,13 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useAppSelector } from "../app/hook";
 import Logout from "./Auth/Logout";
 
 const Navbar = () => {
+  const { userInfo } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -65,6 +68,13 @@ const Navbar = () => {
               }}
             >
               GatherGuru
+            </Typography>
+          </Box>
+
+          <Box display="flex" alignItems="center">
+            <AccountCircleIcon />
+            <Typography variant="h6" px={0.5}>
+              {userInfo?.username}
             </Typography>
           </Box>
 

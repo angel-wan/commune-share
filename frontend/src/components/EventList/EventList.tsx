@@ -4,7 +4,7 @@ import EventItem from "./EventItem";
 import JoinEvent from "./JoinEvent";
 import NewEvent from "./NewEvent";
 import { useAppSelector, useAppDispatch } from "../../app/hook";
-import {  useState } from "react";
+import { useState } from "react";
 
 const EventList = (props) => {
   const { eventList } = props;
@@ -22,12 +22,11 @@ const EventList = (props) => {
     return <div>Loading...</div>;
   }
 
-
   return (
     <Grid container direction="column">
       <Grid item container direction="row" alignItems="center" padding={2}>
         <Grid item xs={4}>
-          <Typography variant="h4">My Events {userInfo?.username}</Typography>
+          <Typography variant="h4">My Events</Typography>
         </Grid>
         <Grid
           item
