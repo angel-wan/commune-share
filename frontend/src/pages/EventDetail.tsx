@@ -7,12 +7,13 @@ import { useCallback, useEffect } from "react";
 import { Button, Grid } from "@mui/material";
 import { resetState } from "../feature/event/eventSlice";
 import { getUsergroupCode } from "../feature/usergroup/usergroupActions";
+import SplitExpense from "../components/SplitExpense/SplitExpense";
 
 const EventDetail = () => {
   // get event id from url
   const dispatch = useAppDispatch();
   const { eventId } = useParams<{ eventId: string }>();
-  const { loading, error,success } = useAppSelector((state) => state.event);
+  const { loading, error, success } = useAppSelector((state) => state.event);
   const { removedEvent, selectedTimeSlots } = useAppSelector(
     (state) => state.event
   );
@@ -28,13 +29,13 @@ const EventDetail = () => {
     }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (success) {
-      if(selectedEvent?.usergroupId){
+      if (selectedEvent?.usergroupId) {
         dispatch(getUsergroupCode(selectedEvent!.usergroupId));
       }
     }
-  },[success])
+  }, [success]);
 
   useEffect(() => {
     if (!removedEvent) return;
@@ -103,7 +104,22 @@ const EventDetail = () => {
         schedule={selectedEvent.schedule}
         selectedTimeSlots={selectedTimeSlots ? selectedTimeSlots : []}
       />
-      <div>{expense?.title}</div>
+      <Grid
+        sx={{
+          backgroundColor: "#1a1d24",
+          alignItems: "center",
+          border: "0.5px solid",
+          borderRadius: 4,
+          spacing: 0,
+          p: 3,
+          mt: 3,
+          cursor: "pointer",
+          marginBottom: "20px",
+        }}
+      >
+        <div>{expense?.title}</div>
+        <SplitExpense expenseId={expense?._id ?? ""} />
+      </Grid>
     </div>
   );
 };
