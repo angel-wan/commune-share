@@ -14,11 +14,11 @@ const Logout = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   if (logoutSuccess === true) {
-  //     navigate("/");
-  //   }
-  // }, [logoutSuccess]);
+  useEffect(() => {
+    if (logoutSuccess === true) {
+      navigate("/");
+    }
+  }, [logoutSuccess]);
   return (
     <span onClick={logout} style={{ cursor: "pointer" }}>
       Logout

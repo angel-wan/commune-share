@@ -30,3 +30,30 @@ export const joinUserGroupByCode = createAsyncThunk(
     }
   }
 );
+
+export const getUsergroupCode = createAsyncThunk(
+  "event/getcode",
+  async (usergroupId: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      // Place the JWT into the request header - remember the space after 'Bearer'
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.post(
+        `${backendURL}/usergroup/id`,
+        { usergroupId },
+        config
+      );
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (e) {
+      // return custom error message from the backend if present
+      if (e instanceof Error) {
+        return rejectWithValue(e.message);
+      }
+    }
+  }
+);

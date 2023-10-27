@@ -122,7 +122,7 @@ export const updateEvent = createAsyncThunk(
 
       const response = await axios.put(
         `${backendURL}/event/update`,
-        { data },
+        data,
         config
       );
 

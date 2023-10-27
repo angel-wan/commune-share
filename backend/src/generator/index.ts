@@ -7,6 +7,9 @@ import VoteGenerator from './vote-generator';
 import ScheduleGenerator from './schedule-generator';
 import ExpenseGenerator from './expense-generator';
 import userGroupGenerator from './usergroup-generator';
+import { Expense } from '../models/expense.model';
+import User from '../models/user.model';
+import UserGroup from '../models/usergroup.model';
 // Import your User model here
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
@@ -20,6 +23,10 @@ db.on('error', () => {
 });
 
 db.once('open', async () => {
+  await Expense.deleteMany();
+  await User.deleteMany();
+  await UserGroup.deleteMany();
+
   const userids = await userGenerator();
   if (!userids) {
     throw new Error('No user ids');

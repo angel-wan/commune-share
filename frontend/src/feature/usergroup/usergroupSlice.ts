@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { joinUserGroupByCode } from "./usergroupActions";
+import { joinUserGroupByCode, getUsergroupCode } from "./usergroupActions";
 
 interface UserGroupState {
   loading: boolean;
   error: string | null;
   success: boolean;
+  code: string;
 }
 
 const initialState = {
   isAuthenticated: false,
+  code: "",
   loading: false,
   error: null,
   success: false, // for monitoring the registration process.
@@ -33,6 +35,27 @@ export const usergroupSlice = createSlice({
     );
     builder.addCase(
       joinUserGroupByCode.rejected,
+      (state: UserGroupState, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      }
+    );
+
+    builder.addCase(getUsergroupCode.pending, (state: UserGroupState) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(
+      getUsergroupCode.fulfilled,
+      (state: UserGroupState, action) => {
+        state.loading = false;
+        state.success = true;
+        state.code = action.payload.code;
+      }
+    );
+    builder.addCase(
+      getUsergroupCode.rejected,
       (state: UserGroupState, action) => {
         state.loading = false;
         state.error = action.payload as string;

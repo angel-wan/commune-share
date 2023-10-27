@@ -14,11 +14,16 @@ export enum EventStatus {
   PAST = 'PAST',
 }
 
+const VoteOptionsSchema = new Schema({
+  option: { type: String, required: false },
+  votes: { type: Array<Schema.Types.ObjectId>, default: [] }, // Use default [] to represent 0 votes
+})
+
 const VoteOptionSchema = new Schema({
   //   option: { type: String, required: false },
   //   votes: { type: Array<Schema.Types.ObjectId>, default: [] }, // Use default [] to represent 0 votes
   title: { type: String, required: false },
-  options: { type: Array, default: [] },
+  options: [VoteOptionsSchema]
 });
 
 const ScheduleSchema = new Schema({

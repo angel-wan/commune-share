@@ -34,3 +34,19 @@ export const joinUserGroupByCode = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error joining events' });
   }
 };
+
+export const getUsergroupCode = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as { _id: string })._id;
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const { usergroupId } = req.body;
+    const usergroup = await UserGroup.findOne({ _id: usergroupId });
+    return res.status(200).json({ code: usergroup?.code });
+  } catch (error) {
+    res.status(500).json({ error: 'Error getting code' });
+  }
+};

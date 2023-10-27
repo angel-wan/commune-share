@@ -5,8 +5,6 @@ import UserGroup from '../models/usergroup.model';
 
 const ExpenseGenerator = async (ids: string[], userGroupIds: string[] = []) => {
   try {
-    // Remove all existing events
-    await Expense.deleteMany();
 
     // random choose 1 event by the id insdie the ids array
     const id = ids[Math.floor(Math.random() * ids.length)];
@@ -20,6 +18,7 @@ const ExpenseGenerator = async (ids: string[], userGroupIds: string[] = []) => {
       throw new Error('Event not found');
     }
     let expenseArray = [];
+    let expenseids = []
     for (let i = 0; i < 50; i++) {
       let fakeUserExpenseArray = [];
       for (let j = 0; j < 10; j++) {
@@ -31,18 +30,19 @@ const ExpenseGenerator = async (ids: string[], userGroupIds: string[] = []) => {
         fakeUserExpenseArray.push(fakeUserExpense);
       }
 
-      console.log(fakeUserExpenseArray);
-
       const fakeExpense: ExpenseDocument = new Expense({
         title: 'fake expense',
         expenses: fakeUserExpenseArray,
         userGroup: userGroupId,
       });
-      expenseArray.push(fakeExpense);
+      const id = await fakeExpense.save();
+      expenseids.push(id._id);
+      // expenseArray.push(fakeExpense);
     }
 
-    const expense = await Expense.bulkSave(expenseArray);
-    const expenseId = Object.values(expense.insertedIds);
+    // const expense = await Expense.bulkSave(expenseArray);
+    // const expenseId = Object.values(expense.insertedIds);
+    const expenseId = expenseids
 
     return { expenseId };
   } catch (error) {
