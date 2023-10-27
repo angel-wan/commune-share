@@ -82,7 +82,7 @@ export const profile = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const userId = req.params; // The user is set in the authentication middleware
-    const user = await User.findById(userId.userId);
+    const user = await User.findById(userId);
     res.json({ user });
   } catch (error) {
     res.status(500).json({ error: 'Profile retrieval failed' });
