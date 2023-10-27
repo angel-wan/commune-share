@@ -12,7 +12,7 @@ const EventDetail = () => {
   // get event id from url
   const dispatch = useAppDispatch();
   const { eventId } = useParams<{ eventId: string }>();
-  const { loading, error } = useAppSelector((state) => state.event);
+  const { loading, error,success } = useAppSelector((state) => state.event);
   const { removedEvent, selectedTimeSlots } = useAppSelector(
     (state) => state.event
   );
@@ -27,6 +27,14 @@ const EventDetail = () => {
       });
     }
   }, []);
+
+  useEffect(()=>{
+    if (success) {
+      if(selectedEvent?.usergroupId){
+        dispatch(getUsergroupCode(selectedEvent!.usergroupId));
+      }
+    }
+  },[success])
 
   useEffect(() => {
     if (!removedEvent) return;

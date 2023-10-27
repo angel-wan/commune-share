@@ -255,8 +255,6 @@ export default function ChooseDate(props: ChooseDateProps) {
                 </div>
               ))}
             </div>
-
-            {/* TODO: ANGEL */}
             <Button variant="outlined" onClick={handleSave}>
               Save
             </Button>
