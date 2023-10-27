@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAuthToken } from "../../utility/authToken";
-const backendURL = "http://127.0.0.1:3000";
+const backendURL = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:3000";
 // get jwt from local storage
 
 export enum ExpenseType {
