@@ -1,4 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  getExpenseById,
+  addExpenseItem,
+  ExpenseItem,
+  getExpenseSummary,
+} from "../../feature/expense/expenseActions";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
+
 import {
   Button,
   Divider,
@@ -14,23 +22,53 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { ExpenseState } from "../../feature/expense/expenseSlice";
 
-const SplitExpense = (props: { selectedExpense: ExpenseState }) => {
-  const { selectedExpense } = props;
-  const [newExpense, setNewExpense] = useState<string>("");
+interface SplitExpenseProp {
+  expenseId: string;
+}
+
+const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
+  const dispatch = useAppDispatch();
+  const { loading, selectedExpense, expenseSummary } = useAppSelector(
+    (state) => state.expense
+  );
+
+  const [expenseItem, setExpenseItem] = useState<ExpenseItem>({
+    title: "",
+    amount: 0,
+  });
+
+  useEffect(() => {
+    if (expenseId) {
+      dispatch(getExpenseById(expenseId));
+      dispatch(getExpenseSummary(expenseId));
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("loading", loading);
+    console.log("selectedExpense", selectedExpense);
+    console.log("selectedExpense.userExpense", selectedExpense?.userExpense);
+    console.log("expenseSummary", expenseSummary);
+  }, [loading]);
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setExpenseItem({ ...expenseItem, [event.target.id]: event.target.value });
+  };
 
   const handleAddExpense = () => {
-    if (newExpense.trim() !== "") {
-      setNewExpense("");
-    }
+    dispatch(
+      addExpenseItem({ expenseId: expenseId, expenses: [expenseItem] })
+    ).then(() => {
+      dispatch(getExpenseSummary(expenseId));
+    });
   };
 
   return (
     <Grid container spacing={2} direction={"column"}>
       <Grid item>
         <Typography variant="h6" component="a">
-          My Expense - {selectedExpense.title}
+          My Expense
         </Typography>
       </Grid>
       <Grid item container spacing={4}>
@@ -38,17 +76,21 @@ const SplitExpense = (props: { selectedExpense: ExpenseState }) => {
           <Grid item xs={8}>
             <TextField
               fullWidth
+              id="title"
               label="Item"
-              value={newExpense}
-              onChange={(e) => setNewExpense(e.target.value)}
+              type="text"
+              value={expenseItem.title}
+              onChange={handleInput}
             />
           </Grid>
           <Grid item xs={4}>
             <TextField
               fullWidth
+              id="amount"
               label="Price"
-              value={newExpense}
-              onChange={(e) => setNewExpense(e.target.value)}
+              type="number"
+              value={expenseItem.amount}
+              onChange={handleInput}
             />
           </Grid>
           <Grid item style={{ width: "100px" }}>
@@ -58,6 +100,17 @@ const SplitExpense = (props: { selectedExpense: ExpenseState }) => {
               onClick={handleAddExpense}
             >
               Add
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<Add />}
+              onClick={() => {
+                console.log("loading", loading);
+                console.log("selectedExpense", selectedExpense);
+                console.log("expenseSummary", expenseSummary);
+              }}
+            >
+              Test
             </Button>
           </Grid>
         </Grid>
@@ -106,10 +159,10 @@ const SplitExpense = (props: { selectedExpense: ExpenseState }) => {
       <Grid item container spacing={4}>
         <Grid item container direction={"column"} sm={6} xs={12}>
           <Typography variant="body1" component="a">
-            Total Amount: {"100"}
+            Total Amount: {expenseSummary?.sum}
           </Typography>
           <Typography variant="body1" component="a">
-            Average: ${"25"}
+            Average: ${expenseSummary?.average}
           </Typography>
         </Grid>
         <Grid item sm={6} xs={12}>

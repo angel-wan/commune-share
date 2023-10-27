@@ -1,27 +1,35 @@
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hook";
-import SplitExpense from "../components/SplitExpense/SplitExpense";
-import { getExpenseById } from "../feature/expense/expenseActions";
 import { useParams } from "react-router-dom";
+import { Grid } from "@mui/material";
+
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { getExpenseById } from "../feature/expense/expenseActions";
+import SplitExpense from "../components/SplitExpense/SplitExpense";
 
 const SplitExpenseDetail = () => {
-  const dispatch = useAppDispatch();
   const { expenseId } = useParams<{ expenseId: string }>();
-  const selectedExpense = useAppSelector((state) => state.expense.selectedExpense);
+
+  const dispatch = useAppDispatch();
+  const { loading, selectedExpense } = useAppSelector((state) => state.expense);
 
   useEffect(() => {
-    if (!expenseId) return;
-    dispatch(getExpenseById(expenseId));
+    if (expenseId) {
+      dispatch(getExpenseById(expenseId));
+    }
   }, []);
 
-  if (!selectedExpense) {
-    return <div>Expense not found</div>;
-  }
+  useEffect(() => {
+    console.log("loading", loading);
+    console.log("selectedExpense", selectedExpense);
+  }, [loading]);
 
   return (
-    <>
-      <SplitExpense selectedExpense={selectedExpense} />
-    </>
+    <Grid container direction="column">
+      <Grid item>{selectedExpense?.title}</Grid>
+      <Grid item>
+        <SplitExpense expenseId={expenseId ?? ""} />
+      </Grid>
+    </Grid>
   );
 };
 
