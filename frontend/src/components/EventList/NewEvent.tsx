@@ -138,20 +138,20 @@ const NewEvent = () => {
               <Button
                 variant="contained"
                 fullWidth={true}
-                onClick={handleClickCreate}
-                disabled={loading}
+                color="error"
+                onClick={handleClose}
               >
-                Create
+                Cancel
               </Button>
             </Grid>
             <Grid item xs={6}>
               <Button
                 variant="contained"
                 fullWidth={true}
-                color="error"
-                onClick={handleClose}
+                onClick={handleClickCreate}
+                disabled={loading}
               >
-                Cancel
+                Create
               </Button>
             </Grid>
           </Grid>

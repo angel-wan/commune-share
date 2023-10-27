@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   TextField,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hook";
@@ -55,9 +56,27 @@ const JoinEvent = () => {
         </DialogContent>
         {/* <DialogContentText>Event Joined</DialogContentText> */}
         <DialogActions>
-          <Button onClick={handleClickJoin}>Join</Button>
-
-          <Button onClick={handleClickClose}>Close</Button>
+          <Grid container px={4} pb={3} spacing={2}>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                color="error"
+                onClick={handleClickClose}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                onClick={handleClickJoin}
+              >
+                Join
+              </Button>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
     </Fragment>
