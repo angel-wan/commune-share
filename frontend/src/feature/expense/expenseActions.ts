@@ -13,6 +13,21 @@ export interface CreateExpenseType {
   type: ExpenseType;
 }
 
+export interface ExpenseItem {
+  title: string;
+  amount: number;
+}
+
+export interface AddExpenseItemType {
+  expenseId: string;
+  expenses: [ExpenseItem];
+}
+
+export interface RemoveExpenseItemType {
+  expenseId: string;
+  expenseItemId: string;
+}
+
 export const createExpenseGroup = createAsyncThunk(
   "expense/create",
   async (data: CreateExpenseType, { rejectWithValue }) => {
@@ -49,9 +64,7 @@ export const listExpense = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const response = await axios.get(
-        `${backendURL}/expense`, config
-      );
+      const response = await axios.get(`${backendURL}/expense`, config);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
@@ -86,4 +99,56 @@ export const getExpenseById = createAsyncThunk(
   }
 );
 
+//removeExpenseItem
 
+export const addExpenseItem = createAsyncThunk(
+  "expense/addExpenseItem",
+  async (data: AddExpenseItemType, { rejectWithValue }) => {
+    const { expenseId, expenses } = data;
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(expenses);
+      const response = await axios.post(
+        `${backendURL}/expense/${expenseId}`,
+        { expenses },
+        config
+      );
+      console.log(response.data);
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const getExpenseSummary = createAsyncThunk(
+  "expense/getExpenseSummary",
+  async (expenseId: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        `${backendURL}/expense/${expenseId}/summary`,
+        config
+      );
+      console.log(response.data);
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);

@@ -6,24 +6,25 @@ import { listExpense } from "../../feature/expense/expenseActions";
 import { Grid, List, ListItem, Paper, Typography } from "@mui/material";
 import JoinExpense from "./JoinExpense";
 import NewExpense from "./NewExpense";
-import { Button } from "rsuite";
 
 const SplitExpenseList = () => {
   const dispatch = useAppDispatch();
-  const expenseList = useAppSelector((state) => state.expense.list);
-  const { userInfo } = useAppSelector((state) => state.auth);
-
+  const { list } = useAppSelector((state) => state.expense);
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(listExpense());
-  }, [userInfo]);
+    console.log("ExpenseList - useEffect -", list);
+  }, []);
+
+  useEffect(() => {
+    console.log("ExpenseList - useEffect - expenseList", list);
+  }, [list]);
 
   const onSelectExpense = (event_id: string) => {
     navigate(`/expense/${event_id}`);
   };
 
-  if (!expenseList) return <div>Loading...</div>;
   return (
     <Grid container direction="column">
       <Grid item container direction="row" alignItems="center" padding={2}>
@@ -39,15 +40,6 @@ const SplitExpenseList = () => {
           xs={8}
         >
           <Grid item>
-            <Button
-              onClick={() => {
-                dispatch(listExpense());
-              }}
-            >
-              Fetch
-            </Button>
-          </Grid>
-          <Grid item>
             <JoinExpense />
           </Grid>
           <Grid item>
@@ -57,9 +49,29 @@ const SplitExpenseList = () => {
       </Grid>
 
       <List>
-        <ListItem>Test</ListItem>
-        {expenseList.map((expense, index) => (
-          <ListItem key={index}>
+        {list.length > 0 ? (
+          list.map((expense, index) => (
+            <ListItem key={index}>
+              <Grid
+                container
+                component={Paper}
+                direction="row"
+                alignItems="center"
+                border={"0.5px solid"}
+                borderRadius={4}
+                spacing={0}
+                sx={{
+                  p: 2,
+                  cursor: "pointer",
+                }}
+                onClick={() => onSelectExpense(expense._id)}
+              >
+                <Typography variant="h5">{expense.title}</Typography>
+              </Grid>
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>
             <Grid
               container
               component={Paper}
@@ -68,62 +80,13 @@ const SplitExpenseList = () => {
               border={"0.5px solid"}
               borderRadius={4}
               spacing={0}
-              sx={{
-                p: 1,
-                cursor: "pointer",
-              }}
-              onClick={() => onSelectExpense(expense._id)}
+              padding={1}
             >
-              <Typography variant="h5">{expense.title}</Typography>
+              There is no expense
             </Grid>
           </ListItem>
-        ))}
+        )}
       </List>
-
-      {/* <Grid item px={2}>
-
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={barStatus}
-          onChange={handleChangeNavbar_1}
-          aria-label="Event List Nav Bar"
-          variant="fullWidth"
-        >
-          <Tab label="Upcoming Events" value={"UPCOMING"} />
-          <Tab label="Pending Events" value={"PENDING"} />
-          <Tab label="Past Events" value={"PAST"} />
-        </Tabs>
-      </Box>
-        <EventListNavbar setBarStatus={setBarStatus} barStatus={barStatus} />
-      </Grid>
-
-      <Grid item>
-        <List>
-          {eventList.map((event, index) => {
-            if (barStatus === "UPCOMING" && event.status === "UPCOMING") {
-              return (
-                <ListItem key={`${event._id}.${index}`}>
-                  <EventItem event={event} />
-                </ListItem>
-              );
-            }
-            if (barStatus === "PENDING" && event.status === "PENDING") {
-              return (
-                <ListItem key={`${event._id}.${index}`}>
-                  <EventItem event={event} />
-                </ListItem>
-              );
-            }
-            if (barStatus === "PAST" && event.status === "PAST") {
-              return (
-                <ListItem key={`${event._id}.${index}`}>
-                  <EventItem event={event} />
-                </ListItem>
-              );
-            }
-          })}
-        </List>
-      </Grid> */}
     </Grid>
   );
 };
