@@ -1,13 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser, logoutUser } from "./authActions";
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
+  getUserById,
+} from "./authActions";
 
-interface AuthState {
+export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   userInfo?: {
     id: string;
     username: string;
     token: string;
+  };
+  user: {
+    id: string;
+    username: string;
+    email: string;
   };
   error: string | null;
   success: boolean;
@@ -77,7 +87,18 @@ export const authSlice = createSlice({
       state.error = action.payload as string;
     });
 
-    // logout user
+    builder.addCase(getUserById.pending, (state: AuthState) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getUserById.fulfilled, (state: AuthState, action) => {
+      state.loading = false;
+      state.user = action.payload;
+    });
+    builder.addCase(getUserById.rejected, (state: AuthState, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 

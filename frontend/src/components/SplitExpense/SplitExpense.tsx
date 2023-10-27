@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getUserById } from "../../feature/auth/authActions";
 import {
   getExpenseById,
   addExpenseItem,
@@ -26,6 +27,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Delete, Refresh } from "@mui/icons-material";
+import { ExpenseSummaryState } from "../../feature/expense/expenseSlice";
 
 interface SplitExpenseProp {
   expenseId: string;
@@ -34,14 +36,17 @@ interface SplitExpenseProp {
 const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.userInfo?.id) ?? "";
+  const user = useAppSelector((state) => state.auth.user);
   const { loading, success, expenseSummary } = useAppSelector(
     (state) => state.expense
   );
+  const [userExpenseSummary, setUserExpenseSummary] = useState<any[]>([]);
 
   const [expenseItem, setExpenseItem] = useState<ExpenseItem>({
     title: "",
     amount: 0,
   });
+  //const [userMap, setUserMap] = useState({});
 
   useEffect(() => {
     if (expenseId) {
@@ -71,6 +76,32 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
     ).then(handleRefresh);
   };
 
+  useEffect(() => {
+    const fetchUserInformation = async (expense: {
+      from: any;
+      to: any;
+      amount?: number;
+    }) => {
+      const fromUserName = (await dispatch(getUserById(expense.from))).payload
+        .user.username;
+      const toUserName = (await dispatch(getUserById(expense.to))).payload.user
+        .username;
+      return { ...expense, fromUserName, toUserName };
+    };
+
+    const fetchUserInformationForExpenses = async () => {
+      const result = await Promise.all(
+        (expenseSummary?.calculation || []).map((expense) =>
+          fetchUserInformation(expense)
+        )
+      );
+      setUserExpenseSummary(result);
+    };
+
+    if (expenseSummary?.calculation) {
+      fetchUserInformationForExpenses();
+    }
+  }, [expenseSummary]);
   return (
     <Grid container spacing={2} direction={"column"}>
       <Grid item container spacing={4}>
@@ -182,32 +213,30 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
         </Grid>
         <Grid item container direction="column" sm={6} xs={12}>
           <List>
-            {expenseSummary?.calculation.map((cal, index) => {
+            {userExpenseSummary?.map((cal, index) => {
+              if (cal.from === userId && cal.to === userId) {
+                return null;
+              }
               if (cal.from === userId) {
+                console.log(cal);
                 return (
                   <ListItem key={index}>
                     <Typography variant="body1" component="a">
-                      Pay to <b>{cal.to}</b> ${cal.amount}
+                      Pay to <b>{cal.toUserName}</b> ${cal.amount}
                     </Typography>
                   </ListItem>
                 );
               }
               if (cal.to === userId) {
+                console.log(cal);
                 return (
                   <ListItem key={index}>
                     <Typography variant="body1" component="a">
-                      Receive from <b>{cal.from}</b> ${cal.amount}
+                      Receive from <b>{cal.fromUserName}</b> ${cal.amount}
                     </Typography>
                   </ListItem>
                 );
               }
-              // if (barStatus === "PAST" && event.status === "PAST") {
-              //   return (
-              //     <ListItem key={`${event._id}.${index}`}>
-              //       <EventItem event={event} />
-              //     </ListItem>
-              //   );
-              // }
             })}
           </List>
         </Grid>

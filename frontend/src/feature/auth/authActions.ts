@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getAuthToken } from "../../utility/authToken";
 
 const backendURL = "http://127.0.0.1:3000";
 
@@ -75,3 +76,25 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
     console.log(error);
   }
 });
+
+export const getUserById = createAsyncThunk(
+  "auth/getUserById",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const token = getAuthToken();
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${backendURL}/user/${userId}`, config);
+      console.log(response.data);
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
