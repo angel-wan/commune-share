@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect } from "react";
 import { Button, Grid } from "@mui/material";
 import { resetState } from "../feature/event/eventSlice";
+import { getUsergroupCode } from "../feature/usergroup/usergroupActions";
 
 const EventDetail = () => {
   // get event id from url
@@ -15,12 +16,15 @@ const EventDetail = () => {
   const { removedEvent, selectedTimeSlots } = useAppSelector(
     (state) => state.event
   );
+  const { code } = useAppSelector((state) => state.usergroup);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (eventId) {
-      dispatch(getEventById(eventId));
+      dispatch(getEventById(eventId)).then(() => {
+        dispatch(getUsergroupCode(selectedEvent!.usergroupId));
+      });
     }
   }, []);
 
@@ -53,7 +57,7 @@ const EventDetail = () => {
     console.log();
   };
 
-  console.log(selectedEvent)
+  console.log(selectedEvent);
   return (
     <div>
       <h1> Event Details</h1>
@@ -78,6 +82,9 @@ const EventDetail = () => {
           <Grid sx={{ margin: "10px" }}>
             Location: {selectedEvent.location}
           </Grid>
+          <Grid sx={{ margin: "10px" }}>
+            Invite Code: {code}
+          </Grid>
           <Button
             variant="outlined"
             onClick={handleRemoveEvent}
@@ -96,9 +103,7 @@ const EventDetail = () => {
         schedule={selectedEvent.schedule}
         selectedTimeSlots={selectedTimeSlots ? selectedTimeSlots : []}
       />
-      <div>
-        {expense?.title}
-      </div>
+      <div>{expense?.title}</div>
     </div>
   );
 };

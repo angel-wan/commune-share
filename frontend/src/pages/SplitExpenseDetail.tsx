@@ -40,7 +40,7 @@ const SplitExpenseDetail = () => {
   useEffect(() => {
     if (expenseId) {
       dispatch(getExpenseById(expenseId)).then(() => {
-        dispatch(getUsergroupCode(selectedExpense?.userGroup ?? ""));
+        dispatch(getUsergroupCode(selectedExpense!.userGroup));
       });
     }
   }, []);

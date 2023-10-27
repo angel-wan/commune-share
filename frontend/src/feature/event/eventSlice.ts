@@ -33,6 +33,7 @@ export interface EventState {
   createdAt: Date;
   status: "PENDING" | "UPCOMING" | "PAST";
   removedEvent?: boolean;
+  usergroupId: string;
 }
 
 export interface ScheduleType {
