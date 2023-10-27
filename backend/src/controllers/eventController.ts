@@ -203,6 +203,9 @@ export const getEventById = async (req: Request, res: Response) => {
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
+    if (admin) {
+      return res.json({ event, isSelectedEventCreator: true });
+    }
     // read user group and check if user is in the group
     const usergroup = await UserGroup.findOne({ _id: event.usergroupId });
 
@@ -228,4 +231,3 @@ export const getEventById = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error listing events' });
   }
 };
-
