@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 export enum Period {
   MORNING = 'MORNING',
   AFTERNOON = 'AFTERNOON',
-  NIGHT = 'NIGHT',
+  EVENING = 'EVENING',
   ALL_DAY = 'ALL_DAY',
 }
 

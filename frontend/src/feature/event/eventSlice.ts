@@ -44,9 +44,21 @@ export interface ScheduleType {
 export enum Period {
   MORNING = "MORNING",
   AFTERNOON = "AFTERNOON",
-  NIGHT = "NIGHT",
+  EVENING = "EVENING",
   ALL_DAY = "ALL_DAY",
 }
+
+export const periodOrder: {
+  MORNING: number;
+  AFTERNOON: number;
+  EVENING: number;
+  ALL_DAY: number;
+} = {
+  MORNING: 1,
+  AFTERNOON: 2,
+  EVENING: 3,
+  ALL_DAY: 4,
+};
 export interface TimeSlotType {
   date: Date; // Date of the time slot
   period: Period; // Time period

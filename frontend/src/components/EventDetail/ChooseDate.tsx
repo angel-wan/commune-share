@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Button } from "@mui/material";
 import { DatePicker } from "rsuite";
 import Dialog from "@mui/material/Dialog";
@@ -7,7 +7,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import isBefore from "date-fns/isBefore";
 import isAfter from "date-fns/isAfter";
-import { TimeSlotType, Period } from "../../feature/event/eventSlice";
+import {
+  TimeSlotType,
+  Period,
+  ScheduleType,
+  periodOrder,
+} from "../../feature/event/eventSlice";
 // Enable dark mode
 import { getEventById } from "../../feature/event/eventActions";
 
@@ -29,12 +34,75 @@ interface ChooseDateProps {
   eventStartDate: Date;
   eventEndDate: Date;
   event_id: string;
-  schedule: {
-    slots: Array<TimeSlotType>;
-    user: string;
-  }[];
+  schedule: Array<ScheduleType>;
   selectedTimeSlots: Array<TimeSlotType>;
 }
+
+interface CommonDate {
+  date: string;
+  period: Period;
+  users: string[];
+}
+
+const sortCommonDates = (schedule: ScheduleType[]): CommonDate[] => {
+  const commonDatesMap = new Map<string, CommonDate>();
+
+  schedule.forEach((userSchedule) => {
+    userSchedule.slots.forEach((slot) => {
+      const slotDate = new Date(slot.date).toDateString();
+      let keys: string[] = [];
+
+      if (slot.period === Period.ALL_DAY) {
+        Object.keys(Period).forEach((period) => {
+          if (period !== Period.ALL_DAY) {
+            keys.push(`${slotDate}-${period}`);
+          }
+        });
+      } else {
+        keys.push(`${slotDate}-${slot.period}`);
+      }
+
+      keys.forEach((key) => {
+        if (!commonDatesMap.has(key)) {
+          commonDatesMap.set(key, {
+            date: slotDate,
+            period: key.split("-")[1] as Period,
+            users: [userSchedule.user],
+          });
+        } else {
+          const commonDate = commonDatesMap.get(key);
+          if (commonDate) {
+            commonDate.users.push(userSchedule.user);
+          }
+        }
+      });
+    });
+  });
+
+  // Extract the grouped common dates as an array
+  const commonDates: CommonDate[] = Array.from(commonDatesMap.values()).flat();
+
+  // Sort common dates
+  commonDates.sort((a, b) => {
+    const usersDiff = b.users.length - a.users.length;
+
+    if (usersDiff === 0) {
+      // If the number of users is the same, compare by date difference
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      const dateDiff = dateA.getTime() - dateB.getTime();
+      if (dateDiff === 0) {
+        // If the dates are the same day, sort by period
+        return periodOrder[a.period] - periodOrder[b.period];
+      }
+      return dateDiff;
+    }
+
+    return usersDiff;
+  });
+
+  return commonDates;
+};
 
 export default function ChooseDate(props: ChooseDateProps) {
   const {
@@ -48,6 +116,7 @@ export default function ChooseDate(props: ChooseDateProps) {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedDateAndTimeSlots, setSelectedDateAndTimeSlots] =
     useState<Array<TimeSlotType>>(selectedTimeSlots);
+  const [commonDates, setCommonDates] = useState<CommonDate[]>([]);
 
   const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -88,6 +157,11 @@ export default function ChooseDate(props: ChooseDateProps) {
       selectedDateAndTimeSlots.filter((item) => item !== e)
     );
   };
+
+  useEffect(() => {
+    const sortedCommonDates = sortCommonDates(schedule);
+    setCommonDates(sortedCommonDates.slice(0, 3) as CommonDate[]);
+  }, [schedule]);
 
   return (
     <div className="rs-theme-dark">
@@ -145,7 +219,6 @@ export default function ChooseDate(props: ChooseDateProps) {
               ))}
             </ul>
             <h2>Your dates picked:</h2>
-
             <ul>
               {selectedTimeSlots.map((item, index) => (
                 <li key={index}>
@@ -170,9 +243,18 @@ export default function ChooseDate(props: ChooseDateProps) {
               })}
             </ul>
             <h2>Common Date</h2>
-            {/* {schedule.map((item, index) => (
+            <div>
+              {commonDates.map((commonDate, index) => (
+                <div key={index} style={{ margin: "16px" }}>
+                  <div>
+                    Date: {new Date(commonDate.date).toDateString()}, Session:{" "}
+                    {commonDate.period}
+                  </div>
+                  <div>Users: {commonDate.users.join(", ")}</div>
+                </div>
+              ))}
+            </div>
 
-            )} */}
             {/* TODO: ANGEL */}
             <Button variant="outlined" onClick={handleSave}>
               Save
