@@ -19,6 +19,7 @@ const EventGenerator = async (ids: any[]) => {
         userGroup: ids[i],
       });
       const expenseId = (await expense.save())._id;
+      
       const fakeEvent = {
         title: faker.company.name(),
         description: faker.lorem.paragraph(),

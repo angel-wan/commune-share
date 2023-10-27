@@ -76,7 +76,9 @@ export const createEvent = async (req: Request, res: Response) => {
 
 export const updateEvent = async (req: Request, res: Response) => {
   try {
-    const { eventId, slots } = req.body.data;
+    const { eventId, slots } = req.body;
+    const { title, description, location, votes, newVotes } = req.body;
+
     const event = await Event.findOne({ _id: eventId });
     const userId = (req.user as { _id: string })._id;
 
@@ -91,8 +93,6 @@ export const updateEvent = async (req: Request, res: Response) => {
     }
 
     const isUserExistInGroup = usergroup.users.find((user) => user.toString() === userId.toString());
-    const { title, description, location, votes, newVotes } = req.body;
-
     // check title, description, location is different from the existing one
     const isTitleChanged = title && title !== event.title;
     const isDescriptionChanged = description && description !== event.description;
@@ -120,22 +120,25 @@ export const updateEvent = async (req: Request, res: Response) => {
 
     const schedule = event.schedule;
 
-    if (schedule.length > 0) {
-      // check if user is in the schedule
-      const isUserExistInSchedule = schedule.find((item) => item.user.toString() === userId.toString());
-      if (!isUserExistInSchedule) {
-        schedule.push({ user: userId, slots });
+    if (slots) {
+      if (schedule.length > 0) {
+        // check if user is in the schedule
+        const isUserExistInSchedule = schedule.find((item) => item.user.toString() === userId.toString());
+        if (!isUserExistInSchedule) {
+          schedule.push({ user: userId, slots });
+        } else {
+          // update the schedule
+          schedule.forEach((schedule) => {
+            if (schedule.user.toString() === userId.toString()) {
+              schedule.slots = slots;
+            }
+          });
+        }
       } else {
-        // update the schedule
-        schedule.forEach((schedule) => {
-          if (schedule.user.toString() === userId.toString()) {
-            schedule.slots = slots;
-          }
-        });
+        schedule.push({ user: userId, slots });
       }
-    } else {
-      schedule.push({ user: userId, slots });
     }
+
     if (votes) {
       await Promise.all(
         votes.map(async (vote: any) => {
@@ -187,7 +190,6 @@ export const updateEvent = async (req: Request, res: Response) => {
 export const removeEvent = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.body;
-    console.log('remove', eventId);
 
     const event = await Event.findOne({ _id: eventId });
     const userId = (req.user as { _id: string })._id;
@@ -223,7 +225,6 @@ export const listEvent = async (req: Request, res: Response) => {
     // find user inside users in Event
     const usergroup = await UserGroup.find({ users: { $in: [userId] } });
     const usergroupIds = usergroup.map((usergroup) => usergroup._id);
-    console.log('usergroupIds', usergroupIds);
     const events = await Event.find({ usergroupId: { $in: usergroupIds } });
 
     // merge two arrays

@@ -17,13 +17,13 @@ export enum EventStatus {
 const VoteOptionsSchema = new Schema({
   option: { type: String, required: false },
   votes: { type: Array<Schema.Types.ObjectId>, default: [] }, // Use default [] to represent 0 votes
-})
+});
 
 const VoteOptionSchema = new Schema({
   //   option: { type: String, required: false },
   //   votes: { type: Array<Schema.Types.ObjectId>, default: [] }, // Use default [] to represent 0 votes
   title: { type: String, required: false },
-  options: [VoteOptionsSchema]
+  options: [VoteOptionsSchema],
 });
 
 const ScheduleSchema = new Schema({
