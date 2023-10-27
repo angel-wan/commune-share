@@ -13,6 +13,11 @@ const isUserCreator = (req: Request, expense: ExpenseDocument) => {
   return creator.toString() === userId.toString();
 };
 
+const isAdmin = async (userId: string) => {
+  const user = await User.findOne({ _id: userId });
+  return user && user.username === 'admin';
+};
+
 const isItemCreator = (req: Request, item: UserExpenseDocument) => {
   const userId = (req.user as { _id: string })._id;
   return item.user.toString() === userId.toString();
@@ -131,7 +136,12 @@ export const listExpenses = async (req: Request, res: Response) => {
     const groups = await UserGroup.find({ users: userId });
     // Query the database to find expense groups where the user is the creator or a member
     const expenses = await Expense.find({ userGroup: { $in: groups } });
-    res.status(200).json({ expenses });
+    const admin = await isAdmin(userId);
+    if (admin) {
+      const expenses = await Expense.find({});
+      return res.status(200).json(expenses);
+    }
+    res.status(200).json(expenses);
   } catch (error) {
     res.status(500).json({ error: 'Error listing expenses' });
   }

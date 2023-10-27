@@ -25,7 +25,6 @@ const JoinExpense = () => {
   };
 
   const handleClickJoin = () => {
-    console.log(code);
     dispatch(joinUserGroupByCode(code));
     handleClickClose();
   };

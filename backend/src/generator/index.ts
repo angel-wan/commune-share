@@ -33,18 +33,18 @@ db.once('open', async () => {
   if (!eventids) {
     throw new Error('No event ids');
   }
-  // await VoteGenerator(eventids, userids);
+  await VoteGenerator(eventids, userids);
 
-  // const eventidsWithSchedule = await ScheduleGenerator(userids);
+  const eventidsWithSchedule = await ScheduleGenerator(userids);
 
-  // if (!eventidsWithSchedule) {
-  //   throw new Error('No event ids with schedule');
-  // }
+  if (!eventidsWithSchedule) {
+    throw new Error('No event ids with schedule');
+  }
 
-  // const expenseIds = await ExpenseGenerator(eventids, userids);
-  // if (!expenseIds) {
-  //   throw new Error('No expense ids');
-  // }
+  const expenseIds = await ExpenseGenerator(eventids, userGroup);
+  if (!expenseIds) {
+    throw new Error('No expense ids');
+  }
   console.log('Done');
   process.exit(0);
 });

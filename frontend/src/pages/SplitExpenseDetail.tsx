@@ -7,9 +7,7 @@ import { useParams } from "react-router-dom";
 const SplitExpenseDetail = () => {
   const dispatch = useAppDispatch();
   const { expenseId } = useParams<{ expenseId: string }>();
-  const selectedExpense = useAppSelector(
-    (state) => state.expense.selectedExpense
-  );
+  const selectedExpense = useAppSelector((state) => state.expense.selectedExpense);
 
   useEffect(() => {
     if (!expenseId) return;
@@ -19,6 +17,7 @@ const SplitExpenseDetail = () => {
   if (!selectedExpense) {
     return <div>Expense not found</div>;
   }
+
   return (
     <>
       <SplitExpense selectedExpense={selectedExpense} />

@@ -43,7 +43,6 @@ export const listExpense = createAsyncThunk(
   "expense",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("listExpense");
       const config = {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer

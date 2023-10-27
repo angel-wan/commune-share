@@ -15,12 +15,8 @@ import {
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { ExpenseState } from "../../feature/expense/expenseSlice";
-interface SplitExpenseProps {
-  selectedExpense: {
-    expense: ExpenseState;
-  };
-}
-const SplitExpense = (props: SplitExpenseProps) => {
+
+const SplitExpense = (props: { selectedExpense: ExpenseState }) => {
   const { selectedExpense } = props;
   const [newExpense, setNewExpense] = useState<string>("");
 
@@ -34,7 +30,7 @@ const SplitExpense = (props: SplitExpenseProps) => {
     <Grid container spacing={2} direction={"column"}>
       <Grid item>
         <Typography variant="h6" component="a">
-          My Expense - {selectedExpense.expense.title}
+          My Expense - {selectedExpense.title}
         </Typography>
       </Grid>
       <Grid item container spacing={4}>

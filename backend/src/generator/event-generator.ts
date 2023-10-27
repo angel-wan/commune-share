@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import Event from '../models/event.model';
+import { Expense } from '../models/expense.model';
 
 const EventGenerator = async (ids: any[]) => {
   try {
@@ -13,6 +14,11 @@ const EventGenerator = async (ids: any[]) => {
     for (let i = 0; i < numFakeEvents; i++) {
       const startDate = new Date().getTime();
       const endDate = startDate + Math.random() * 5;
+      const expense = new Expense({
+        title: faker.company.name(),
+        userGroup: ids[i],
+      });
+      const expenseId = (await expense.save())._id;
       const fakeEvent = {
         title: faker.company.name(),
         description: faker.lorem.paragraph(),
@@ -21,6 +27,7 @@ const EventGenerator = async (ids: any[]) => {
         eventEndDate: endDate,
         status: Math.random() > 0.5 ? 'PENDING' : 'UPCOMING',
         usergroupId: ids[i],
+        expenseId,
       };
 
       fakeEvents.push(new Event(fakeEvent));

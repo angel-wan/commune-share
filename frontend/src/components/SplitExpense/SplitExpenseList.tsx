@@ -17,13 +17,13 @@ const SplitExpenseList = () => {
 
   useEffect(() => {
     dispatch(listExpense());
-    console.log("ExpenseList - useEffect - expense", expenseList);
   }, [userInfo]);
 
   const onSelectExpense = (event_id: string) => {
     navigate(`/expense/${event_id}`);
   };
 
+  if (!expenseList) return <div>Loading...</div>;
   return (
     <Grid container direction="column">
       <Grid item container direction="row" alignItems="center" padding={2}>

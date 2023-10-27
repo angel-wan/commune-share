@@ -54,7 +54,7 @@ export const expenseListSlice = createSlice({
     });
     builder.addCase(listExpense.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload.expenses;
+      state.list = action.payload;
       state.success = true;
     });
     builder.addCase(listExpense.rejected, (state, action) => {
@@ -69,7 +69,7 @@ export const expenseListSlice = createSlice({
     });
     builder.addCase(getExpenseById.fulfilled, (state, action) => {
       state.loading = false;
-      state.selectedExpense = action.payload;
+      state.selectedExpense = action.payload.expense;
       state.success = true;
     });
     builder.addCase(getExpenseById.rejected, (state, action) => {
