@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Event, { EventDocument } from '../models/event.model'; // Import your user model
+import Event, { EventDocument, VotesType } from '../models/event.model'; // Import your user model
 import User from '../models/user.model';
 import UserGroup, { UserGroupDocument } from '../models/usergroup.model';
 import { Expense } from '../models/expense.model';
@@ -91,7 +91,7 @@ export const updateEvent = async (req: Request, res: Response) => {
     }
 
     const isUserExistInGroup = usergroup.users.find((user) => user.toString() === userId.toString());
-    const { title, description, location } = req.body;
+    const { title, description, location, votes, newVotes } = req.body;
 
     // check title, description, location is different from the existing one
     const isTitleChanged = title && title !== event.title;
@@ -136,8 +136,49 @@ export const updateEvent = async (req: Request, res: Response) => {
     } else {
       schedule.push({ user: userId, slots });
     }
+    if (votes) {
+      await Promise.all(
+        votes.map(async (vote: any) => {
+          const existingVote = event.votes.find((v) => v._id?.toString() === vote.voteId);
+          console.log({ vote });
+          if (!existingVote) {
+            return res.status(400).json({ error: `Vote ${vote.voteId} does not exist` });
+          }
+          if (vote.title) existingVote.title = vote.title;
+          if (vote.options) {
+            vote.options.map((option: { optionId?: string; option: any }) => {
+              const existingVoteOptionIndex = existingVote.options.findIndex((o) => o._id === option.optionId);
+              if (existingVoteOptionIndex < 0) {
+                return res.status(400).json({ error: `Vote option ${option.optionId} does not exist` });
+              }
+              existingVote.options[existingVoteOptionIndex] = option.option;
+            });
+          }
+          if (vote.newOptions) {
+            vote.newOptions.map((newOptionTitle: string) => {
+              if (!existingVote.options) {
+                existingVote.options = [];
+              }
+              const newOption = {
+                option: newOptionTitle,
+                votes: [],
+              };
+              existingVote.options.push(newOption);
+            });
+          }
+        }),
+      );
+    }
+
+    if (newVotes) {
+      await Promise.all(
+        newVotes.map(async (vote: VotesType) => {
+          event.votes.push(vote);
+        }),
+      );
+    }
     await event.save();
-    res.json({ event });
+    res.status(200).json({ event });
   } catch (error) {
     res.status(500).json({ error: 'Event update failed' });
   }

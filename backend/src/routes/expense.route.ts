@@ -14,6 +14,8 @@ const expenseRouter = express.Router();
 // protected route
 expenseRouter.post('', requireAuth, createExpense);
 expenseRouter.post('/:expenseId', requireAuth, addExpenseItem);
+// expenseRouter.put('/update', requireAuth, updateExpense);
+expenseRouter.delete('/:expenseId', requireAuth, removeExpense);
 expenseRouter.delete('/:expenseId/:expenseItemId', requireAuth, removeExpenseItem);
 expenseRouter.get('', requireAuth, listExpenses);
 expenseRouter.get('/:expenseId', requireAuth, getExpenseById);

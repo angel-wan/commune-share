@@ -68,13 +68,15 @@ export interface EventDocument extends Document {
 }
 
 export interface VotesType {
+  _id?: string;
   title: string;
   options: Array<VoteOptionType>;
 }
 
 export interface VoteOptionType {
+  _id?: string;
   option: string;
-  votes: Array<string> | []; //User Id String
+  votes: string[];
 }
 
 export interface ScheduleType {
