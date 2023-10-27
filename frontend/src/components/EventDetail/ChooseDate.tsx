@@ -119,10 +119,12 @@ export default function ChooseDate(props: ChooseDateProps) {
               {selectedDateAndTimeSlots.map((item, index) => (
                 <div
                   key={`${item.date} - ${index}`}
-                  style={{ display: "flex", marginTop: "10px" }}
+                  style={{ display: "flex", marginTop: "10px", alignItems: "center" }}
                 >
                   <li key={index}>
-                    {`Date: ${item.date}, Session: ${item.period}`}
+                    {`Date: ${new Date(item.date).toLocaleString()}, Session: ${
+                      item.period
+                    }`}
                   </li>
                   <Button
                     variant="outlined"
@@ -139,7 +141,9 @@ export default function ChooseDate(props: ChooseDateProps) {
             <ul>
               {selectedTimeSlots.map((item, index) => (
                 <li key={index}>
-                  {`Date: ${item.date}, Session: ${item.period}`}
+                  {`Date: ${new Date(item.date).toLocaleString()}, Session: ${
+                    item.period
+                  }`}
                 </li>
               ))}
             </ul>
