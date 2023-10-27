@@ -5,11 +5,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Grid,
   TextField,
 } from "@mui/material";
 import { useAppDispatch } from "../../app/hook";
 import { joinUserGroupByCode } from "../../feature/usergroup/usergroupActions";
-
 const JoinExpense = () => {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
@@ -25,6 +25,7 @@ const JoinExpense = () => {
   };
 
   const handleClickJoin = () => {
+    console.log(code);
     dispatch(joinUserGroupByCode(code));
     handleClickClose();
   };
@@ -40,12 +41,12 @@ const JoinExpense = () => {
         open={open}
         onClose={handleClickClose}
       >
-        <DialogTitle>Join Event</DialogTitle>
+        <DialogTitle>Join Expense</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth={true}
             id="standard-basic"
-            label="Event Code"
+            label="Expense Code"
             variant="standard"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setCode(event.target.value);
@@ -55,9 +56,27 @@ const JoinExpense = () => {
         </DialogContent>
         {/* <DialogContentText>Event Joined</DialogContentText> */}
         <DialogActions>
-          <Button onClick={handleClickJoin}>Join</Button>
-
-          <Button onClick={handleClickClose}>Close</Button>
+          <Grid container px={4} pb={3} spacing={2}>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                color="error"
+                onClick={handleClickClose}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                onClick={handleClickJoin}
+              >
+                Join
+              </Button>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
     </Fragment>
