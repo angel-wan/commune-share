@@ -31,6 +31,7 @@ export const createExpense = async (req: Request, res: Response) => {
     const newUserGroup: UserGroupDocument = new UserGroup({
       users: [creator],
       code: faker.random.alphaNumeric(5),
+      creator,
     });
     const savedUserGroupId = await newUserGroup.save();
     if (!savedUserGroupId) {

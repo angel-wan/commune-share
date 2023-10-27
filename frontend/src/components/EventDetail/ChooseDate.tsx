@@ -111,6 +111,7 @@ export default function ChooseDate(props: ChooseDateProps) {
     event_id,
     schedule,
     selectedTimeSlots,
+    ranking,
   } = props;
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -147,7 +148,7 @@ export default function ChooseDate(props: ChooseDateProps) {
       dispatch(getEventById(event_id));
     });
   };
-
+  console.log("rank", ranking);
   const removeSelectedDate = (e: {
     date: Date;
     period: Period;
@@ -204,9 +205,9 @@ export default function ChooseDate(props: ChooseDateProps) {
                   }}
                 >
                   <li key={index}>
-                    {`Date: ${new Date(item.date).toLocaleString()}, Session: ${
-                      item.period
-                    }`}
+                    {`Date: ${new Date(item.date)
+                      .toDateString()
+                      .toLocaleString()}, Session: ${item.period}`}
                   </li>
                   <Button
                     variant="outlined"
@@ -222,9 +223,9 @@ export default function ChooseDate(props: ChooseDateProps) {
             <ul>
               {selectedTimeSlots.map((item, index) => (
                 <li key={index}>
-                  {`Date: ${new Date(item.date).toLocaleString()}, Session: ${
-                    item.period
-                  }`}
+                  {`Date: ${new Date(item.date)
+                    .toDateString()
+                    .toLocaleString()}, Session: ${item.period}`}
                 </li>
               ))}
             </ul>
@@ -234,9 +235,9 @@ export default function ChooseDate(props: ChooseDateProps) {
                 if (item.user.toString() !== userInfo!.id.toString()) {
                   return item.slots.map((slot, index) => (
                     <li key={index}>
-                      {`Date: ${new Date(
-                        slot.date
-                      ).toLocaleString()}, Session: ${slot.period}`}
+                      {`Date: ${new Date(slot.date)
+                        .toDateString()
+                        .toLocaleString()}, Session: ${slot.period}`}
                     </li>
                   ));
                 }

@@ -16,7 +16,9 @@ import SplitExpense from "../components/SplitExpense/SplitExpense";
 const SplitExpenseDetail = () => {
   const navigate = useNavigate();
   const { expenseId } = useParams<{ expenseId: string }>();
-  const { loading, selectedExpense } = useAppSelector((state) => state.expense);
+  const { loading, selectedExpense, success } = useAppSelector(
+    (state) => state.expense
+  );
   const { code } = useAppSelector((state) => state.usergroup);
   const dispatch = useAppDispatch();
 
@@ -39,12 +41,15 @@ const SplitExpenseDetail = () => {
 
   useEffect(() => {
     if (expenseId) {
-      dispatch(getExpenseById(expenseId)).then(() => {
-        dispatch(getUsergroupCode(selectedExpense!.userGroup));
-      });
+      dispatch(getExpenseById(expenseId)).then(() => {});
     }
   }, []);
 
+  useEffect(() => {
+    if (success) {
+      dispatch(getUsergroupCode(selectedExpense!.userGroup));
+    }
+  }, [success]);
   return (
     <Grid container marginTop={2} spacing={4} direction="column">
       <Grid item container direction="row">

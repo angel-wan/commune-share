@@ -52,12 +52,6 @@ const EventDetail = () => {
     return <div>Event not found</div>;
   }
 
-  const calculateBestTime = () => {
-    //TODO: calculate best time
-    console.log();
-  };
-
-  console.log(selectedEvent);
   return (
     <div>
       <h1> Event Details</h1>
@@ -82,9 +76,7 @@ const EventDetail = () => {
           <Grid sx={{ margin: "10px" }}>
             Location: {selectedEvent.location}
           </Grid>
-          <Grid sx={{ margin: "10px" }}>
-            Invite Code: {code}
-          </Grid>
+          <Grid sx={{ margin: "10px" }}>Invite Code: {code}</Grid>
           <Button
             variant="outlined"
             onClick={handleRemoveEvent}
