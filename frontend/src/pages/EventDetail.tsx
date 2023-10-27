@@ -30,13 +30,8 @@ const EventDetail = () => {
     navigate("/");
   }, [removedEvent]);
 
-  useEffect(() => {
-    if (loading === false && error === null) {
-      // dispatch(getEventById(eventId));
-    }
-  }, [loading]);
-
   const selectedEvent = useAppSelector((state) => state.event.selectedEvent);
+  const expense = useAppSelector((state) => state.event.expense);
 
   const handleRemoveEvent = useCallback(() => {
     if (!selectedEvent) return;
@@ -99,6 +94,9 @@ const EventDetail = () => {
         schedule={selectedEvent.schedule}
         selectedTimeSlots={selectedTimeSlots ? selectedTimeSlots : []}
       />
+      <div>
+        {expense?.title}
+      </div>
     </div>
   );
 };

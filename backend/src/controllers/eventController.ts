@@ -203,19 +203,25 @@ export const getEventById = async (req: Request, res: Response) => {
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
-    if (admin) {
-      return res.json({ event, isSelectedEventCreator: true });
-    }
+
     // read user group and check if user is in the group
     const usergroup = await UserGroup.findOne({ _id: event.usergroupId });
-
     const selectedTimeSlots = event.schedule.find((schedule) => schedule.user.toString() === _id.toString());
-
+    let expense;
+    if (event.expenseId) {
+      expense = await Expense.findById(event.expenseId);
+      if (!expense) {
+        return res.status(404).json({ error: 'Expense not found' });
+      }
+    }
+    if (admin) {
+      return res.json({ event, isSelectedEventCreator: true, selectedTimeSlots: selectedTimeSlots?.slots, expense });
+    }
     if (!usergroup) {
       return res.status(404).json({ error: 'Group not found' });
     }
     if (usergroup.creator.toString() === _id.toString()) {
-      return res.json({ event, isSelectedEventCreator: true, selectedTimeSlots: selectedTimeSlots?.slots });
+      return res.json({ event, isSelectedEventCreator: true, selectedTimeSlots: selectedTimeSlots?.slots, expense });
     }
     if (usergroup.creator.toString() !== _id.toString()) {
       const attendee = usergroup.users.find((attendee) => {
@@ -226,7 +232,7 @@ export const getEventById = async (req: Request, res: Response) => {
       }
     }
 
-    res.json({ event, isSelectedEventCreator: false, selectedTimeSlots: selectedTimeSlots?.slots });
+    res.json({ event, isSelectedEventCreator: false, selectedTimeSlots: selectedTimeSlots?.slots, expense });
   } catch (error) {
     res.status(500).json({ error: 'Error listing events' });
   }

@@ -6,6 +6,7 @@ import {
   updateEvent,
   getEventById,
 } from "./eventActions";
+import { ExpenseState } from "../expense/expenseSlice";
 
 export interface EventListState {
   list: EventState[];
@@ -16,6 +17,7 @@ export interface EventListState {
   error: string | null;
   success: boolean;
   removedEvent?: boolean;
+  expense?: ExpenseState;
 }
 
 export interface EventState {
@@ -85,6 +87,7 @@ export const eventListSlice = createSlice({
       state.success = false;
       state.isSelectedEventCreator = false;
       state.removedEvent = false;
+      state.expense = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -164,6 +167,7 @@ export const eventListSlice = createSlice({
       state.selectedEvent = action.payload.event;
       state.isSelectedEventCreator = action.payload.isSelectedEventCreator;
       state.selectedTimeSlots = action.payload.selectedTimeSlots;
+      state.expense = action.payload.expense;
       state.success = true;
     });
     builder.addCase(getEventById.rejected, (state, action) => {
