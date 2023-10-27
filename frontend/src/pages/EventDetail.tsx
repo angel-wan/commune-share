@@ -52,6 +52,8 @@ const EventDetail = () => {
     //TODO: calculate best time
     console.log();
   };
+
+  console.log(selectedEvent)
   return (
     <div>
       <h1> Event Details</h1>

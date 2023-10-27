@@ -78,6 +78,7 @@ export const expenseListSlice = createSlice({
     builder.addCase(createExpenseGroup.fulfilled, (state, action) => {
       state.loading = false;
       state.success = true;
+      state.list = action.payload.expense;
     });
     builder.addCase(createExpenseGroup.rejected, (state, action) => {
       state.loading = false;

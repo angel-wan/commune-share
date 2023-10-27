@@ -267,7 +267,7 @@ export const getEventById = async (req: Request, res: Response) => {
     }
     if (usergroup.creator.toString() !== _id.toString()) {
       const attendee = usergroup.users.find((attendee) => {
-        return attendee === _id.toString();
+        return attendee.toString() === _id.toString();
       });
       if (!attendee) {
         return res.status(401).json({ error: 'You Are Not Event Attendee' });

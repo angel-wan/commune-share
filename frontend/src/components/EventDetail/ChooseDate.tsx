@@ -14,7 +14,7 @@ import { getEventById } from "../../feature/event/eventActions";
 import "rsuite/dist/rsuite-no-reset.min.css";
 import "./date.css";
 import { updateEvent } from "../../feature/event/eventActions";
-import { useAppDispatch } from "../../app/hook";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
 
 const Label = (props) => {
   return (
@@ -29,7 +29,10 @@ interface ChooseDateProps {
   eventStartDate: Date;
   eventEndDate: Date;
   event_id: string;
-  schedule: Array<TimeSlotType>;
+  schedule: {
+    slots: Array<TimeSlotType>;
+    user: string;
+  }[];
   selectedTimeSlots: Array<TimeSlotType>;
 }
 
@@ -46,6 +49,7 @@ export default function ChooseDate(props: ChooseDateProps) {
   const [selectedDateAndTimeSlots, setSelectedDateAndTimeSlots] =
     useState<Array<TimeSlotType>>(selectedTimeSlots);
 
+  const { userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const handleDateChange = (date: Date) => {
@@ -119,7 +123,11 @@ export default function ChooseDate(props: ChooseDateProps) {
               {selectedDateAndTimeSlots.map((item, index) => (
                 <div
                   key={`${item.date} - ${index}`}
-                  style={{ display: "flex", marginTop: "10px", alignItems: "center" }}
+                  style={{
+                    display: "flex",
+                    marginTop: "10px",
+                    alignItems: "center",
+                  }}
                 >
                   <li key={index}>
                     {`Date: ${new Date(item.date).toLocaleString()}, Session: ${
@@ -146,6 +154,20 @@ export default function ChooseDate(props: ChooseDateProps) {
                   }`}
                 </li>
               ))}
+            </ul>
+            <h2>Dates picked by others:</h2>
+            <ul>
+              {schedule.map((item) => {
+                if (item.user.toString() !== userInfo!.id.toString()) {
+                  return item.slots.map((slot, index) => (
+                    <li key={index}>
+                      {`Date: ${new Date(
+                        slot.date
+                      ).toLocaleString()}, Session: ${slot.period}`}
+                    </li>
+                  ));
+                }
+              })}
             </ul>
             <h2>Common Date</h2>
             {/* {schedule.map((item, index) => (
