@@ -12,9 +12,7 @@ import { LoginData, loginUser } from "../../feature/auth/authActions";
 import SignUp from "./SignUp";
 
 const Login = () => {
-  const { loading, userInfo, success, isAuthenticated } = useAppSelector(
-    (state) => state.auth
-  );
+  const { loading, userInfo } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(userInfo === undefined);
@@ -49,9 +47,6 @@ const Login = () => {
       .unwrap()
       .then((originalPromiseResult) => {
         console.log("originalPromiseResult", originalPromiseResult);
-        if (originalPromiseResult.user) {
-          window.location.reload();
-        }
       })
       .catch((rejectedValueOrSerializedError) => {
         console.log(

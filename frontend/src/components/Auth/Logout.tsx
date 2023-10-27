@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Logout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { success } = useAppSelector((state) => state.auth);
+  const { logoutSuccess } = useAppSelector((state) => state.auth);
 
   const logout = useCallback(async () => {
     dispatch(logoutUser()).then(() => {
@@ -15,10 +15,10 @@ const Logout = () => {
   }, []);
 
   useEffect(() => {
-    if (success === true) {
+    if (logoutSuccess === true) {
       navigate("/");
     }
-  }, [success]);
+  }, [logoutSuccess]);
   return (
     <span onClick={logout} style={{ cursor: "pointer" }}>
       Logout

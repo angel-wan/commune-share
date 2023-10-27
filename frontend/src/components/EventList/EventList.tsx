@@ -4,20 +4,24 @@ import EventItem from "./EventItem";
 import JoinEvent from "./JoinEvent";
 import NewEvent from "./NewEvent";
 import { useAppSelector, useAppDispatch } from "../../app/hook";
-import { useEffect, useState } from "react";
-import { listEvents } from "../../feature/event/eventActions";
-import { shallowEqual } from "react-redux";
+import {  useState } from "react";
 
-const EventList = () => {
-  const eventList = useAppSelector((state) => state.event.list, shallowEqual);
-  const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state) => state.auth);
+const EventList = (props) => {
+  const { eventList } = props;
+  // const event = useAppSelector((state) => state.event);
+  const { userInfo, success, isAuthenticated } = useAppSelector(
+    (state) => state.auth
+  );
   const [barStatus, setBarStatus] = useState("UPCOMING");
 
-  useEffect(() => {
-    dispatch(listEvents());
-    console.log("EventList - useEffect - userInfo", eventList);
-  }, [userInfo]);
+  if (!isAuthenticated) {
+    return <div>Please login to view your events</div>;
+  }
+
+  if (!eventList) {
+    return <div>Loading...</div>;
+  }
+
 
   return (
     <Grid container direction="column">

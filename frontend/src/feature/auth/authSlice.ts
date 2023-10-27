@@ -11,6 +11,7 @@ interface AuthState {
   };
   error: string | null;
   success: boolean;
+  logoutSuccess: boolean;
 }
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   loading: false,
   error: null,
   success: false, // for monitoring the registration process.
+  logoutSuccess: false,
 } as AuthState;
 
 export const authSlice = createSlice({
@@ -62,13 +64,13 @@ export const authSlice = createSlice({
     builder.addCase(logoutUser.pending, (state: AuthState) => {
       state.loading = true;
       state.error = null;
-      state.success = false;
+      state.logoutSuccess = false;
     });
     builder.addCase(logoutUser.fulfilled, (state: AuthState) => {
       state.loading = false;
       state.userInfo = undefined;
       state.isAuthenticated = false;
-      state.success = true;
+      state.logoutSuccess = true;
     });
     builder.addCase(logoutUser.rejected, (state: AuthState, action) => {
       state.loading = false;

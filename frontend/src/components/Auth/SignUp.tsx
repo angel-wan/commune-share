@@ -29,8 +29,7 @@ const SignUp = () => {
   const [registerData, setRegisterData] = useState(initialRegisterData);
 
   useEffect(() => {
-    console.log("SignUp - useEffect - success", success);
-    console.log("SignUp - useEffect: loading", loading);
+   
     if (loading !== previousLoading.current && !loading) {
       if (success) {
         console.log("SignUp - success");
