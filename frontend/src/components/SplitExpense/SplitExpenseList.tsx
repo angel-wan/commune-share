@@ -17,10 +17,6 @@ const SplitExpenseList = () => {
     console.log("ExpenseList - useEffect -", list);
   }, []);
 
-  useEffect(() => {
-    console.log("ExpenseList - useEffect - expenseList", list);
-  }, [list]);
-
   const onSelectExpense = (event_id: string) => {
     navigate(`/expense/${event_id}`);
   };

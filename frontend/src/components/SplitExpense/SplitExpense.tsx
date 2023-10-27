@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import {
   getExpenseById,
   addExpenseItem,
-  ExpenseItem,
   getExpenseSummary,
+  ExpenseItem,
 } from "../../feature/expense/expenseActions";
-import { getUsergroupCode } from "../../feature/usergroup/usergroupActions";
+import { UserExpenseState } from "../../feature/expense/expenseSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 
 import {
   Button,
   Divider,
   Grid,
+  IconButton,
+  List,
+  ListItem,
   Paper,
   Table,
   TableCell,
@@ -22,7 +25,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, Delete, Refresh } from "@mui/icons-material";
 
 interface SplitExpenseProp {
   expenseId: string;
@@ -30,10 +33,11 @@ interface SplitExpenseProp {
 
 const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
   const dispatch = useAppDispatch();
+  const { code } = useAppSelector((state) => state.usergroup);
+  const userId = useAppSelector((state) => state.auth.userInfo?.id) ?? "";
   const { loading, success, selectedExpense, expenseSummary } = useAppSelector(
     (state) => state.expense
   );
-  const { code } = useAppSelector((state) => state.usergroup);
 
   const [expenseItem, setExpenseItem] = useState<ExpenseItem>({
     title: "",
@@ -42,23 +46,23 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
 
   useEffect(() => {
     if (expenseId) {
-      dispatch(getExpenseById(expenseId)).then(() => {
-        console;
-        dispatch(getUsergroupCode(selectedExpense?.userGroup ?? ""));
-      });
+      dispatch(getExpenseById(expenseId));
       dispatch(getExpenseSummary(expenseId));
     }
   }, []);
 
-  useEffect(() => {
-    console.log("useEffect: code", code);
-    console.log("useEffect: selectedExpense", selectedExpense?.userGroup);
-    console.log(
-      "useEffect: selectedExpense.userExpense",
-      selectedExpense?.userExpense
-    );
-    console.log("useEffect: expenseSummary", expenseSummary?.groupedExpenses);
-  }, [loading, code]);
+  // useEffect(() => {
+  //   console.log(
+  //     "useEffect: expenseSummary.calculation",
+  //     expenseSummary?.calculation
+  //   );
+  //   console.log("useEffect: expenseSummary", expenseSummary?.calculation[0].);
+  //   console.log("useEffect: expenseSummary", expenseSummary?.calculation.to);
+  //   console.log(
+  //     "useEffect: expenseSummary",
+  //     expenseSummary?.calculation.amount
+  //   );
+  // }, [loading, code]);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setExpenseItem({ ...expenseItem, [event.target.id]: event.target.value });
@@ -72,13 +76,13 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
     });
   };
 
+  const handleRefresh = () => {
+    dispatch(getExpenseById(expenseId));
+    dispatch(getExpenseSummary(expenseId));
+  };
+
   return (
     <Grid container spacing={2} direction={"column"}>
-      <Grid item>
-        <Typography variant="h6" component="a">
-          My Expense
-        </Typography>
-      </Grid>
       <Grid item container spacing={4}>
         <Grid item container sm={6} xs={12} spacing={1}>
           <Grid item xs={8}>
@@ -91,7 +95,7 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
               onChange={handleInput}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} maxHeight="">
             <TextField
               fullWidth
               id="amount"
@@ -109,16 +113,14 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
             >
               Add
             </Button>
+          </Grid>
+          <Grid item style={{ width: "100px" }}>
             <Button
               variant="outlined"
-              startIcon={<Add />}
-              onClick={() => {
-                console.log("loading", loading);
-                console.log("selectedExpense", selectedExpense);
-                console.log("expenseSummary", expenseSummary);
-              }}
+              startIcon={<Refresh />}
+              onClick={handleRefresh}
             >
-              Test
+              Refresh
             </Button>
           </Grid>
         </Grid>
@@ -140,20 +142,29 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
                 <TableRow>
                   <TableCell>Item</TableCell>
                   <TableCell>Price</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  {/* {todos.map((todo) => (
-                    <TodoItem
-                      key={todo.id}
-                      todo={todo}
-                      onToggle={toggleTodo}
-                      onDelete={deleteTodo}
-                      onEdit={editTodo}
-                    />
-                  ))} */}
-                </TableRow>
+                {expenseSummary?.groupedExpenses[userId] &&
+                  expenseSummary?.groupedExpenses[userId].expenses.map(
+                    (expense) => (
+                      <TableRow key={expense._id}>
+                        <TableCell>{expense.title}</TableCell>
+                        <TableCell>${expense.amount}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            aria-label="delete"
+                            size="large"
+                            color="error"
+                            //onClick={() => onDelete(todo.id)}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -172,11 +183,43 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
           <Typography variant="body1" component="a">
             Average: ${expenseSummary?.average}
           </Typography>
-        </Grid>
-        <Grid item sm={6} xs={12}>
           <Typography variant="body1" component="a">
-            Pay to <b>{"abc"}</b> ${"25"}
+            I Paid: $
+            {expenseSummary?.groupedExpenses[userId]
+              ? expenseSummary?.groupedExpenses[userId].total
+              : 0}
           </Typography>
+        </Grid>
+        <Grid item container direction="column" sm={6} xs={12}>
+          <List>
+            {expenseSummary?.calculation.map((cal, index) => {
+              if (cal.from === userId) {
+                return (
+                  <ListItem key={index}>
+                    <Typography variant="body1" component="a">
+                      Pay to <b>{cal.to}</b> ${cal.amount}
+                    </Typography>
+                  </ListItem>
+                );
+              }
+              if (cal.to === userId) {
+                return (
+                  <ListItem key={index}>
+                    <Typography variant="body1" component="a">
+                      Receive from <b>{cal.from}</b> ${cal.amount}
+                    </Typography>
+                  </ListItem>
+                );
+              }
+              // if (barStatus === "PAST" && event.status === "PAST") {
+              //   return (
+              //     <ListItem key={`${event._id}.${index}`}>
+              //       <EventItem event={event} />
+              //     </ListItem>
+              //   );
+              // }
+            })}
+          </List>
         </Grid>
       </Grid>
     </Grid>

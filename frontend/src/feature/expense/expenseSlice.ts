@@ -28,6 +28,7 @@ export interface ExpenseState {
 }
 
 export interface UserExpenseState {
+  _id: string;
   user: string;
   title: string;
   amount: number;
@@ -46,7 +47,7 @@ export interface ExpenseSummaryState {
     from: string;
     to: string;
     amount: number;
-  };
+  }[];
 }
 
 const initialState: ExpenseListState = {

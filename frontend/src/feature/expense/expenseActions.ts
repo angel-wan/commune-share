@@ -89,7 +89,7 @@ export const getExpenseById = createAsyncThunk(
         `${backendURL}/expense/${expenseId}`,
         config
       );
-    
+
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       if (error instanceof Error) {
@@ -112,13 +112,13 @@ export const addExpenseItem = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      console.log(expenses);
+      // console.log(expenses);
       const response = await axios.post(
         `${backendURL}/expense/${expenseId}`,
         { expenses },
         config
       );
-      console.log(response.data);
+      // console.log(response.data);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
