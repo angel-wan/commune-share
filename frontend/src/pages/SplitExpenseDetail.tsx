@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Grid, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 
 import { useAppDispatch, useAppSelector } from "../app/hook";
-import { getExpenseById } from "../feature/expense/expenseActions";
+import {
+  getExpenseById,
+  removeExpense,
+  listExpense,
+} from "../feature/expense/expenseActions";
 import { getUsergroupCode } from "../feature/usergroup/usergroupActions";
 
 import SplitExpense from "../components/SplitExpense/SplitExpense";
 
 const SplitExpenseDetail = () => {
+  const navigate = useNavigate();
   const { expenseId } = useParams<{ expenseId: string }>();
   const { loading, selectedExpense } = useAppSelector((state) => state.expense);
   const { code } = useAppSelector((state) => state.usergroup);
@@ -25,7 +30,12 @@ const SplitExpenseDetail = () => {
     setAnchorEl(null);
   };
 
-  const handleClickRemove = () => {};
+  const handleClickRemove = () => {
+    dispatch(removeExpense(expenseId ?? "")).then(() => {
+      dispatch(listExpense());
+      navigate(-1);
+    });
+  };
 
   useEffect(() => {
     if (expenseId) {

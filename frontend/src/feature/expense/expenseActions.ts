@@ -54,6 +54,30 @@ export const createExpenseGroup = createAsyncThunk(
   }
 );
 
+export const removeExpense = createAsyncThunk(
+  "expense/removeExpense",
+  async (expenseId: string, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await axios.delete(
+        `${backendURL}/expense/${expenseId}`,
+        config
+      );
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
 export const listExpense = createAsyncThunk(
   "expense",
   async (_, { rejectWithValue }) => {
@@ -99,8 +123,6 @@ export const getExpenseById = createAsyncThunk(
   }
 );
 
-//removeExpenseItem
-
 export const addExpenseItem = createAsyncThunk(
   "expense/addExpenseItem",
   async (data: AddExpenseItemType, { rejectWithValue }) => {
@@ -112,13 +134,36 @@ export const addExpenseItem = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      // console.log(expenses);
       const response = await axios.post(
         `${backendURL}/expense/${expenseId}`,
         { expenses },
         config
       );
-      // console.log(response.data);
+      return await response.data; // Assuming the API returns a string (e.g., a token)
+    } catch (error) {
+      // return custom error message from the backend if present
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);
+
+export const removeExpenseItem = createAsyncThunk(
+  "expense/removeExpenseItem",
+  async (data: RemoveExpenseItemType, { rejectWithValue }) => {
+    const { expenseId, expenseItemId } = data;
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`, // Place the JWT into the request header - remember the space after 'Bearer
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await axios.delete(
+        `${backendURL}/expense/${expenseId}/${expenseItemId}`,
+        config
+      );
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present

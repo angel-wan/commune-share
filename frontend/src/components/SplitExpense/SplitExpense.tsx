@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import {
   getExpenseById,
   addExpenseItem,
+  removeExpenseItem,
   getExpenseSummary,
   ExpenseItem,
 } from "../../feature/expense/expenseActions";
-import { UserExpenseState } from "../../feature/expense/expenseSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 
 import {
@@ -33,9 +33,8 @@ interface SplitExpenseProp {
 
 const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
   const dispatch = useAppDispatch();
-  const { code } = useAppSelector((state) => state.usergroup);
   const userId = useAppSelector((state) => state.auth.userInfo?.id) ?? "";
-  const { loading, success, selectedExpense, expenseSummary } = useAppSelector(
+  const { loading, success, expenseSummary } = useAppSelector(
     (state) => state.expense
   );
 
@@ -51,34 +50,25 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log(
-  //     "useEffect: expenseSummary.calculation",
-  //     expenseSummary?.calculation
-  //   );
-  //   console.log("useEffect: expenseSummary", expenseSummary?.calculation[0].);
-  //   console.log("useEffect: expenseSummary", expenseSummary?.calculation.to);
-  //   console.log(
-  //     "useEffect: expenseSummary",
-  //     expenseSummary?.calculation.amount
-  //   );
-  // }, [loading, code]);
-
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setExpenseItem({ ...expenseItem, [event.target.id]: event.target.value });
-  };
-
-  const handleAddExpense = () => {
-    dispatch(
-      addExpenseItem({ expenseId: expenseId, expenses: [expenseItem] })
-    ).then(() => {
-      dispatch(getExpenseSummary(expenseId));
-    });
   };
 
   const handleRefresh = () => {
     dispatch(getExpenseById(expenseId));
     dispatch(getExpenseSummary(expenseId));
+  };
+
+  const handleAddExpense = () => {
+    dispatch(
+      addExpenseItem({ expenseId: expenseId, expenses: [expenseItem] })
+    ).then(handleRefresh);
+  };
+
+  const handleDeleteExpense = (expenseItemId: string) => {
+    dispatch(
+      removeExpenseItem({ expenseId: expenseId, expenseItemId: expenseItemId })
+    ).then(handleRefresh);
   };
 
   return (
@@ -157,7 +147,7 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
                             aria-label="delete"
                             size="large"
                             color="error"
-                            //onClick={() => onDelete(todo.id)}
+                            onClick={() => handleDeleteExpense(expense._id)}
                           >
                             <Delete />
                           </IconButton>
