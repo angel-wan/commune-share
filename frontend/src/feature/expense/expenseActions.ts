@@ -53,7 +53,6 @@ export const listExpense = createAsyncThunk(
       const response = await axios.get(
         `${backendURL}/expense`, config
       );
-      console.log(response.data);
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       // return custom error message from the backend if present
@@ -78,7 +77,7 @@ export const getExpenseById = createAsyncThunk(
         `${backendURL}/expense/${expenseId}`,
         config
       );
-      console.log(response.data);
+    
       return await response.data; // Assuming the API returns a string (e.g., a token)
     } catch (error) {
       if (error instanceof Error) {

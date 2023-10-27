@@ -14,8 +14,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-
-const SplitExpense = () => {
+import { ExpenseState } from "../../feature/expense/expenseSlice";
+interface SplitExpenseProps {
+  selectedExpense: {
+    expense: ExpenseState;
+  };
+}
+const SplitExpense = (props: SplitExpenseProps) => {
+  const { selectedExpense } = props;
   const [newExpense, setNewExpense] = useState<string>("");
 
   const handleAddExpense = () => {
@@ -28,7 +34,7 @@ const SplitExpense = () => {
     <Grid container spacing={2} direction={"column"}>
       <Grid item>
         <Typography variant="h6" component="a">
-          My Expense
+          My Expense - {selectedExpense.expense.title}
         </Typography>
       </Grid>
       <Grid item container spacing={4}>

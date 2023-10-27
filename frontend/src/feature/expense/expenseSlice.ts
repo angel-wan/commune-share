@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {listExpense} from "./expenseActions"
+import { listExpense, getExpenseById } from "./expenseActions";
 
 export enum ExpenseType {
   EVENT = "Event",
@@ -25,7 +25,7 @@ export interface UserExpenseState {
   amount: number;
 }
 
-const initialState:ExpenseListState = {
+const initialState: ExpenseListState = {
   list: [],
   loading: false,
   error: null,
@@ -47,7 +47,6 @@ export const expenseListSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-
     builder.addCase(listExpense.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -55,7 +54,7 @@ export const expenseListSlice = createSlice({
     });
     builder.addCase(listExpense.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
+      state.list = action.payload.expenses;
       state.success = true;
     });
     builder.addCase(listExpense.rejected, (state, action) => {
@@ -63,6 +62,20 @@ export const expenseListSlice = createSlice({
       state.error = action.payload as string;
     });
 
+    builder.addCase(getExpenseById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(getExpenseById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.selectedExpense = action.payload;
+      state.success = true;
+    });
+    builder.addCase(getExpenseById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 export const resetState = expenseListSlice.actions.resetState;

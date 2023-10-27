@@ -131,7 +131,7 @@ export const listExpenses = async (req: Request, res: Response) => {
     const groups = await UserGroup.find({ users: userId });
     // Query the database to find expense groups where the user is the creator or a member
     const expenses = await Expense.find({ userGroup: { $in: groups } });
-    res.status(200).json(expenses);
+    res.status(200).json({ expenses });
   } catch (error) {
     res.status(500).json({ error: 'Error listing expenses' });
   }
