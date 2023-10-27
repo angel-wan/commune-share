@@ -5,6 +5,7 @@ import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import { eventListSlice } from "../feature/event/eventSlice";
 import { authSlice } from "../feature/auth/authSlice";
 import { expenseListSlice } from "../feature/expense/expenseSlice";
+import { usergroupSlice } from "../feature/usergroup/usergroupSlice";
 
 const authPersistConfig = {
   key: "auth",
@@ -21,7 +22,7 @@ export const store = configureStore({
     auth: authReducer,
     event: eventListSlice.reducer,
     expense: expenseListSlice.reducer,
-    usergroup: eventListSlice.reducer,
+    usergroup: usergroupSlice.reducer,
   },
   middleware: customizedMiddleware,
 });

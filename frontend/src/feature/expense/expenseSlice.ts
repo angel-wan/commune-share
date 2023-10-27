@@ -24,6 +24,7 @@ export interface ExpenseState {
   _id: string;
   title: string;
   userExpense: UserExpenseState[];
+  userGroup: string;
 }
 
 export interface UserExpenseState {
@@ -78,7 +79,7 @@ export const expenseListSlice = createSlice({
     builder.addCase(createExpenseGroup.fulfilled, (state, action) => {
       state.loading = false;
       state.success = true;
-      state.list = action.payload.expense;
+      state.error = null;
     });
     builder.addCase(createExpenseGroup.rejected, (state, action) => {
       state.loading = false;
@@ -94,6 +95,7 @@ export const expenseListSlice = createSlice({
       state.loading = false;
       state.list = action.payload;
       state.success = true;
+      state.error = null;
     });
     builder.addCase(listExpense.rejected, (state, action) => {
       state.loading = false;
@@ -107,7 +109,7 @@ export const expenseListSlice = createSlice({
     });
     builder.addCase(getExpenseById.fulfilled, (state, action) => {
       state.loading = false;
-      state.selectedExpense = action.payload;
+      state.selectedExpense = action.payload.expense;
       state.success = true;
     });
     builder.addCase(getExpenseById.rejected, (state, action) => {

@@ -5,6 +5,7 @@ import {
   ExpenseItem,
   getExpenseSummary,
 } from "../../feature/expense/expenseActions";
+import { getUsergroupCode } from "../../feature/usergroup/usergroupActions";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 
 import {
@@ -29,9 +30,10 @@ interface SplitExpenseProp {
 
 const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
   const dispatch = useAppDispatch();
-  const { loading, selectedExpense, expenseSummary } = useAppSelector(
+  const { loading, success, selectedExpense, expenseSummary } = useAppSelector(
     (state) => state.expense
   );
+  const { code } = useAppSelector((state) => state.usergroup);
 
   const [expenseItem, setExpenseItem] = useState<ExpenseItem>({
     title: "",
@@ -40,17 +42,23 @@ const SplitExpense: React.FC<SplitExpenseProp> = ({ expenseId }) => {
 
   useEffect(() => {
     if (expenseId) {
-      dispatch(getExpenseById(expenseId));
+      dispatch(getExpenseById(expenseId)).then(() => {
+        console;
+        dispatch(getUsergroupCode(selectedExpense?.userGroup ?? ""));
+      });
       dispatch(getExpenseSummary(expenseId));
     }
   }, []);
 
   useEffect(() => {
-    console.log("loading", loading);
-    console.log("selectedExpense", selectedExpense);
-    console.log("selectedExpense.userExpense", selectedExpense?.userExpense);
-    console.log("expenseSummary", expenseSummary);
-  }, [loading]);
+    console.log("useEffect: code", code);
+    console.log("useEffect: selectedExpense", selectedExpense?.userGroup);
+    console.log(
+      "useEffect: selectedExpense.userExpense",
+      selectedExpense?.userExpense
+    );
+    console.log("useEffect: expenseSummary", expenseSummary?.groupedExpenses);
+  }, [loading, code]);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setExpenseItem({ ...expenseItem, [event.target.id]: event.target.value });
